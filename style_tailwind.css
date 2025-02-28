@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@theme {
+    --bg-primary: oklch(0.216 0.006 56.043);
+    --bg-secondary: oklch(0.374 0.01 67.558);
+    --bg-tertiary: oklch(0.922 0 0);
+    --text-primary: oklch(0.922 0 0);
+    --text-secondary: oklch(0.87 0 0);
+    --text-secondary: oklch(0.87 0 0);
+    --text-tertiary: oklch(0.205 0 0);
+    --text-highlight: oklch(0.705 0.213 47.604);
+}
+
+@layer utilities {
+    .scrollbar::-webkit-scrollbar {
+        width: 0.5rem;
+    }
+
+    .scrollbar::-webkit-scrollbar-track {
+        @apply rounded-xl bg-zinc-50;
+    }
+
+    .scrollbar::-webkit-scrollbar-thumb {
+        @apply rounded-xl bg-zinc-800;
+    }
+
+    .pixel-art {
+        image-rendering: pixelated;
+    }
+}
