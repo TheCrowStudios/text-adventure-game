@@ -28,9 +28,4 @@ export class GameState {
     getCurrentRoom() {
         return this.rooms[this.currentRoomId];
     }
-    swapInventoryItems(sourceInvIndex, targetIndex) {
-        const temp = this.inventory[sourceInvIndex];
-        this.inventory[sourceInvIndex] = this.inventory[targetIndex];
-        this.inventory[targetIndex] = temp;
-    }
 }

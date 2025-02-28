@@ -1,18 +1,47 @@
 import { GameState } from "./game-state.js";
 import { gameData } from "./game-data.js";
 
+type GameEvent = {
+    type: string;
+    payload: any;
+}
+
+type EventListener = (event: GameEvent) => void;
+
+class EventSystem {
+    private listeners: Record<string, EventListener[]> = {};
+
+    addEventListener(type: string, callback: EventListener) {
+        if (!this.listeners[type]) {
+            this.listeners[type] = []; // add an array with key of type to listeners
+        }
+
+        this.listeners[type].push(callback);
+    }
+
+    dispatchEvent(event: GameEvent) {
+        const { type } = event;
+        console.log(`event ${type} dispatched`);
+        if (this.listeners[type]) {
+            this.listeners[type].forEach(callback => {
+                callback(event);
+            });
+        }
+    }
+}
+
+const events = new EventSystem();
+
 class GameEngine {
     invSize: number;
     state: GameState;
     output: (text: String) => void;
-    drawInventory: (inventory: string[]) => void;
     updateCompass: (compass: string[]) => void;
 
-    constructor(gameData: any, outputFunction: (text: String) => void, drawInventory: (inventory: string[]) => void, updateCompass: (directions: string[]) => void, invSize: number) {
+    constructor(gameData: any, outputFunction: (text: String) => void, updateCompass: (directions: string[]) => void, invSize: number) {
         this.invSize = invSize;
         this.state = new GameState(gameData, invSize);
         this.output = outputFunction;
-        this.drawInventory = drawInventory;
         this.updateCompass = updateCompass;
     }
 
@@ -32,7 +61,7 @@ class GameEngine {
 
         this.output(description);
         this.updateCompass(Object.keys(room.exits));
-        this.drawInventory(this.state.inventory);
+        events.dispatchEvent({ type: 'inventoryUpdated', payload: {} });
     }
 
     help() {
@@ -90,6 +119,13 @@ class GameEngine {
             this.output(`You can't go <strong>${direction}</strong> from here.`);
         }
     }
+
+    swapInventoryItems(sourceInvIndex: number, targetIndex: number) {
+        const temp = this.state.inventory[sourceInvIndex];
+        this.state.inventory[sourceInvIndex] = this.state.inventory[targetIndex];
+        this.state.inventory[targetIndex] = temp;
+        events.dispatchEvent({ type: 'inventoryUpdated', payload: {} });
+    }
 }
 
 class CommandProcessor {
@@ -122,6 +158,102 @@ document.addEventListener('DOMContentLoaded', () => {
         elementOutput.innerHTML += `${text}`;
         elementOutput.scrollTop = elementOutput.scrollHeight;
     };
+
+
+    const handleDrop = (e: DragEvent) => {
+        currentDragOperation = false;
+        e.preventDefault();
+
+        const targetCell = e.currentTarget as HTMLElement;
+        const data = e.dataTransfer?.getData('text/plain');
+
+        if (!data) return;
+
+        try {
+            const { sourceInvIndex } = JSON.parse(data);
+            const targetIndex = Number.parseInt(targetCell.getAttribute('data-index') || '-1');
+
+            targetCell.classList.remove('bg-(--bg-secondary)');
+
+            if (sourceInvIndex !== null && targetIndex !== null) {
+                game.swapInventoryItems(sourceInvIndex, targetIndex);
+            }
+        } catch (error) {
+            console.error('error handling item drop:', error);
+        }
+    }
+
+    /**
+     * draws items in inventory
+     * @param inventory 
+     */
+    const drawInventory = () => {
+        console.log('draw inventory');
+        const cells = document.querySelectorAll('.inv-cell');
+
+        game.state.inventory.forEach((itemId: string, i: number) => {
+            cells[i].innerHTML = '';
+            const item = game.state.items[itemId];
+
+            if (itemId !== '' && cells[i] && item.img) {
+                const img = document.createElement('img') as HTMLImageElement;
+                img.src = `/images/items/${item.img}`;
+                img.className = 'w-full aspect-square pixel-art'
+                img.draggable = true;
+                img.addEventListener('click', () => { selectInvItem(i) })
+                img.addEventListener('dragstart', handleDragStart);
+                img.addEventListener('mouseenter', () => { displayItemInformation(item) });
+                img.addEventListener('mouseleave', () => { hideItemInformation(i) });
+                img.setAttribute('data-index', i.toString()); // corresponds to the actual position of the item in the inventory
+                cells[i].appendChild(img);
+            }
+        })
+    }
+
+    events.addEventListener('inventoryUpdated', (e: GameEvent) => drawInventory())
+
+    const handleDragStart = (e: DragEvent) => {
+        currentDragOperation = true;
+
+        const target = e.target as HTMLElement;
+        const index = Number.parseInt(target.getAttribute('data-index') || '-1');
+
+        if (index !== null && game.state.inventory[index] && game.state.inventory[index] != '') {
+            e.dataTransfer?.setData('text/plain', JSON.stringify({
+                sourceInvIndex: index.toString() // the original index that corresponds to the inventory array
+            }))
+        }
+    }
+
+    let selectedInvSlot: number = -1;
+
+    /**
+     * toggles the selected inventory item
+     * @param item 
+     * @param index 
+     */
+    const selectInvItem = (index: number) => {
+        console.log('select item');
+        const cells = document.querySelectorAll('.inv-cell');
+
+        if (selectedInvSlot !== index) selectedInvSlot = index;
+        else selectedInvSlot = -1;
+
+        cells.forEach((cell, i) => {
+            if (i !== index || selectedInvSlot === -1) cell.classList.remove('bg-(--bg-secondary)');
+            else cell.classList.add('bg-(--bg-secondary)');
+        })
+    }
+
+    const displayItemInformation = (item: any) => {
+        const textItemInformation = document.getElementById('item-information-div');
+        if (textItemInformation) textItemInformation.innerHTML = `<p><strong>${item.name}</strong></p><p>${item.description}</p>`;
+    }
+
+    const hideItemInformation = (index: number) => {
+        const textItemInformation = document.getElementById('item-information-div');
+        if (textItemInformation && selectedInvSlot !== index) textItemInformation.innerHTML = '';
+    }
 
     formInput.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -198,7 +330,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     }
 
-    game = new GameEngine(gameData, appendOutput, drawInventory, updateCompass, invSize);
+    game = new GameEngine(gameData, appendOutput, updateCompass, invSize);
     game.displayCurrentRoom();
 })
 
@@ -210,76 +342,4 @@ function setInputText(text: string) {
     const elementInput = document.getElementById('input-command') as HTMLInputElement;
     elementInput.value = text;
     elementInput.focus();
-}
-
-const handleDrop = (e: DragEvent) => {
-    currentDragOperation = false;
-    e.preventDefault();
-
-    const targetCell = e.currentTarget as HTMLElement;
-    const data = e.dataTransfer?.getData('text/plain');
-
-    if (!data) return;
-
-    try {
-        const { sourceInvIndex } = JSON.parse(data);
-        const targetIndex = Number.parseInt(targetCell.getAttribute('data-index') || '-1');
-
-        if (sourceInvIndex !== null && targetIndex !== null) {
-            game.state.swapInventoryItems(sourceInvIndex, targetIndex);
-            drawInventory(game.state.inventory); // TODO - fire inventory updated event
-        }
-    } catch (error) {
-        console.error('error handling item drop:', error);
-    }
-}
-
-/**
- * draws items in inventory
- * @param inventory 
- */
-const drawInventory = (inventory: string[]) => {
-    const cells = document.querySelectorAll('.inv-cell');
-
-    inventory.forEach((itemId: string, i: number) => {
-        cells[i].innerHTML = '';
-        const item = game.state.items[itemId];
-
-        if (itemId !== '' && cells[i] && item.img) {
-            const img = document.createElement('img') as HTMLImageElement;
-            img.src = `/images/items/${item.img}`;
-            img.className = 'w-full aspect-square pixel-art'
-            img.draggable = true;
-            img.addEventListener('dragstart', handleDragStart);
-            img.addEventListener('mouseenter', () => {displayItemInformation(item)});
-            img.addEventListener('mouseleave', hideItemInformation);
-            img.setAttribute('data-index', i.toString()); // corresponds to the actual position of the item in the inventory
-            cells[i].appendChild(img);
-        }
-    })
-}
-
-document.addEventListener('inventoryUpdated', (e) => drawInventory())
-
-const handleDragStart = (e: DragEvent) => {
-    currentDragOperation = true;
-
-    const target = e.target as HTMLElement;
-    const index = Number.parseInt(target.getAttribute('data-index') || '-1');
-
-    if (index !== null && game.state.inventory[index] && game.state.inventory[index] != '') {
-        e.dataTransfer?.setData('text/plain', JSON.stringify({
-            sourceInvIndex: index.toString() // the original index that corresponds to the inventory array
-        }))
-    }
-}
-
-const displayItemInformation = (item) => {
-    const textItemInformation = document.getElementById('item-information-div');
-    textItemInformation.innerHTML = `<p><strong>${item.name}</strong></p><p>${item.description}</p>`;
-}
-
-const hideItemInformation = () => {
-    const textItemInformation = document.getElementById('item-information-div');
-    textItemInformation?.innerHTML = '';
 }
