@@ -73,6 +73,7 @@ class GameEngine {
                 break;
             default:
                 this.output(`<p>I don't understand "${command}". Type <strong>help</strong> for a list of commands.</p>`);
+                break;
         }
     }
 
@@ -257,6 +258,8 @@ const drawInventory = (inventory: string[]) => {
         }
     })
 }
+
+document.addEventListener('inventoryUpdated', (e) => drawInventory())
 
 const handleDragStart = (e: DragEvent) => {
     currentDragOperation = true;

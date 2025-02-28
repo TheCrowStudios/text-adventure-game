@@ -62,5 +62,6 @@ export class GameState {
         const temp = this.inventory[sourceInvIndex];
         this.inventory[sourceInvIndex] = this.inventory[targetIndex];
         this.inventory[targetIndex] = temp;
+        dispatchEvent(new CustomEvent('inventoryUpdated', { detail: { inventory: this.inventory } }));
     }
 }
