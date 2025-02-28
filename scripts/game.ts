@@ -113,16 +113,37 @@ class GameEngine {
 
     goDirection(direction: string) {
         const room = this.state.getCurrentRoom();
+        let exitId;
 
         if (room.exits[direction]) {
-            this.state.currentRoomId = room.exits[direction];
-            this.displayCurrentRoom();
+            exitId = direction;
         } else if (room.exits[direction.substring(0, 1)]) {
-            this.state.currentRoomId = room.exits[direction.substring(0, 1)];
-            this.displayCurrentRoom();
+            exitId = direction.substring(0, 1);
         } else {
             this.output(`You can't go <strong>${direction}</strong> from here.`);
+            return;
         }
+
+        const roomAtExit = this.state.rooms[room.exits[exitId]];
+        let hasAllItems = true;
+        let requiredItemsMessage = '<p>Looks like I need: ';
+        if (roomAtExit.requiredItems) roomAtExit.requiredItems.forEach(requiredItemId => {
+            if (this.state.inventory.findIndex(itemId => { return requiredItemId === itemId }) == -1) {
+                requiredItemsMessage += `<strong class="text-amber-200">${this.state.items[requiredItemId].name}</strong>, `;
+                hasAllItems = false;
+            }
+        })
+
+        requiredItemsMessage = requiredItemsMessage.substring(0, requiredItemsMessage.length - 2); // remove comma
+        requiredItemsMessage += ' before going in there.</p>';
+
+        if (!hasAllItems) {
+            this.output(requiredItemsMessage);
+            return;
+        }
+
+        this.state.currentRoomId = room.exits[exitId]; // set current room
+        this.displayCurrentRoom();
     }
 
     takeItem(noun: string) {

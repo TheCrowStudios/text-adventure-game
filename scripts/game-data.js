@@ -23,7 +23,7 @@ export const gameData = {
             name: "Blacksmith",
             description: "The local village blacksmith",
             exits: { "w": "village_outside" },
-            items: [],
+            items: ["dagger"],
             enemies: []
         },
         "village_outskirts_n": {
@@ -32,7 +32,8 @@ export const gameData = {
             description: "A beautiful field with lush green grass",
             exits: { "n": "village_forest", "s": "village_outside" },
             items: [],
-            enemies: []
+            enemies: [],
+            requiredItems: ["dagger"]
         },
         "village_forest": {
             id: "village_forest",
@@ -51,13 +52,33 @@ export const gameData = {
             canTake: true,
             useEffect: "light", // TODO - give item types, such as weapon, food, or armor, etc
             img: "torch.png" // NOTE - images for items must be placed under /images/items/nameofimage
+        },
+        "dagger": {
+            id: "dagger",
+            name: "Dagger",
+            description: "A small knife used for cutting whatever you like.",
+            canTake: true,
+            useEffect: "attack",
+            img: "dagger.png",
+            avgDamage: 4,
+            damageRange: 1
+        },
+        "steel_sword": {
+            id: "steel_sword",
+            name: "Sword",
+            description: "A steel sword",
+            canTake: true,
+            useEffect: "attack",
+            img: "sword.png",
+            avgDamage: 8,
+            damageRange: 3
         }
     },
     enemies: {
         "goblin_regular": {
             id: "goblin_regular",
             name: "Regular goblin",
-            description: "Silly goober looking goblin.",
+            description: "*little goblin runs past* woah what the hell did you see that",
             health: 12,
             avgDamage: 2,
             damageRange: 1

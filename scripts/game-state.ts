@@ -8,12 +8,15 @@ interface Room extends GameObject {
     exits: Record<string, string>; // direction, roomId
     items: string[]; // item ids
     enemies: string[]; // enemy ids
+    requiredItems?: string[];
 }
 
 interface Item extends GameObject {
     canTake: boolean;
-    useEffect?: string; // optional, the id of the effect when used
+    useEffect?: string; // optional, the effect when used
     img?: string;
+    avgDamage?: number;
+    damageRange?: number;
 }
 
 interface Enemy extends GameObject {
