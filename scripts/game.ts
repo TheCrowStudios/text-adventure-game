@@ -321,6 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const hideItemInformation = (index: number) => {
         const textItemInformation = document.getElementById('item-information-div');
         if (textItemInformation && selectedInvSlot !== index) textItemInformation.innerHTML = '';
+        if (selectedInvSlot !== -1) displayItemInformation(game.state.getItemFromInventoryIndex(selectedInvSlot)); // display information on currently selected item
     }
 
     formInput.addEventListener('submit', (e) => {

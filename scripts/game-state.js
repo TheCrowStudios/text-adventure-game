@@ -28,4 +28,7 @@ export class GameState {
     getCurrentRoom() {
         return this.rooms[this.currentRoomId];
     }
+    getItemFromInventoryIndex(index) {
+        return this.items[this.inventory[index]];
+    }
 }
