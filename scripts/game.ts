@@ -49,6 +49,11 @@ class GameEngine {
         const room = this.state.getCurrentRoom();
         let description = `<h2 class="text-amber-200">${room.name}</h2><p>${room.description}</p>`;
 
+        if (room.items.length > 0) {
+            description += '<p>You see ';
+            description += '<span class="text-amber-200">' + room.items.map(itemId => this.state.items[itemId].name).join('</span>, <span class="text-amber-200">') + '</span></p>';
+        }
+
         description += `<br>`;
         description += `<p>Exits:</p><p>`;
         Object.entries(room.exits).forEach(([exitId, roomId]) => {
@@ -89,7 +94,7 @@ class GameEngine {
             case 'get':
             case 'g':
             case 'loot':
-                // this.takeItem(noun);
+                this.takeItem(noun);
                 break;
             case 'use':
                 // this.useItem(noun);
@@ -118,6 +123,48 @@ class GameEngine {
         } else {
             this.output(`You can't go <strong>${direction}</strong> from here.`);
         }
+    }
+
+    takeItem(noun: string) {
+        console.log('take item');
+        const room = this.state.getCurrentRoom();
+        let itemTaken = false;
+
+        room.items.forEach((item, i) => {
+            if (itemTaken) return;
+
+            let selectedItem = this.state.items[item];
+
+            if (selectedItem && selectedItem.name.toLowerCase() === noun.toLowerCase()) {
+                if (this.addItemToInventory(item)) {
+                    this.output(`<p>Picked up <strong class="text-amber-200">${selectedItem.name}</strong>.</p>`);
+                    events.dispatchEvent({ type: 'inventoryUpdated', payload: {} });
+                    this.state.rooms[this.state.currentRoomId].items.splice(i, 1); // remove picked up item from room
+                    itemTaken = true;
+                    return;
+                }
+
+                this.output('<p>Not enough space in inventory!</p>');
+            }
+        })
+
+        if (!itemTaken) this.output(`<p>Could not pick up <strong>${noun}</strong></p>`);
+    }
+
+    /**
+     * adds item to the first free slot in the inventory and returns true if the item gets added
+     * @param itemId 
+     * @returns 
+     */
+    addItemToInventory(itemId: string): boolean {
+        const index = this.state.inventory.findIndex(value => { return value == '' }); // find index of first empty slot
+
+        if (index !== -1) {
+            this.state.inventory[index] = itemId;
+            return true;
+        }
+
+        return false;
     }
 
     swapInventoryItems(sourceInvIndex: number, targetIndex: number) {

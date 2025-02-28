@@ -6,8 +6,8 @@ interface GameObject {
 
 interface Room extends GameObject {
     exits: Record<string, string>; // direction, roomId
-    items: string[];
-    enemies: string[];
+    items: string[]; // item ids
+    enemies: string[]; // enemy ids
 }
 
 interface Item extends GameObject {
