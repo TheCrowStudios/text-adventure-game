@@ -15,20 +15,20 @@
         <div class="flex flex-row max-lg:flex-col w-full h-full gap-4">
             <!-- col 1 -->
             <div
-                class="flex items-center max-lg:order-2 max-lg:w-full max-lg:h-3/12 flex-col max-lg:flex-row w-3/12 h-full max-lg:overflow-y-scroll scrollbar gap-4 p-2">
+                class="flex max-lg:relative items-center max-lg:order-2 max-lg:w-full max-lg:h-5/12 flex-col max-lg:flex-row w-3/12 h-full scrollbar gap-4 p-2">
                 <!-- inventory  -->
-                <div class="w-full h-full">
-                    <div class="grid aspect-square object-contain w-full max-lg:grid-cols-4 max-lg:grid-rows-4 max-w-full max-h-1/2 max-lg:w-1/2 grid-cols-4 grid-rows-4 auto-cols-max"
+                <div class="aspect-square object-cover lg:max-h-1/2 max-lg:max-h-full max-lg:max-w-1/2 lg:w-full max-lg:h-full">
+                    <div class="grid aspect-square object-cover max-lg:grid-cols-4 max-lg:grid-rows-4 max-w-full grid-cols-4 grid-rows-4 auto-cols-max"
                         id="inventory">
                     </div>
                 </div>
 
-                <span class="lg:flex-grow"></span>
+                <span class="flex-grow"></span>
 
                 <!-- compass -->
+                <span class="text-xl font-bold max-lg:hidden">Available exits:</span>
                 <div
-                    class="relative max-lg:h-full max-w-full max-h-1/2 aspect-square items-center text-xl font-bold p-2">
-                    <span>Available exits:</span>
+                    class="relative max-lg:right-0 max-lg:-translate-x-1/2 max-lg:h-full lg:w-full max-h-1/2 aspect-square items-center text-xl font-bold p-2">
                     <div class="top-0 left-1/2 absolute transform -translate-x-1/2 cursor-pointer hover:text-(--text-highlight) w-full h-8"
                         id="dir-n">
                         <span
@@ -84,7 +84,7 @@
             </div>
 
             <!-- col 3 -->
-            <div class="max-lg:order-1 max-lg:w-full max-lg:h-3/12 flex-col w-3/12">
+            <div class="max-lg:order-1 max-lg:w-full max-lg:h-1/12 flex-col w-3/12">
                 <!-- character stats like health, hunger, armor -->
                 <div>
                     <p>Health: 100</p>
