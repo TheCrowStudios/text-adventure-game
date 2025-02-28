@@ -50,6 +50,7 @@ class GameEngine {
         let description = `<h2 class="text-amber-200">${room.name}</h2><p>${room.description}</p>`;
 
         if (room.items.length > 0) {
+            description += `<br>`;
             description += '<p>You see ';
             description += '<span class="text-amber-200">' + room.items.map(itemId => this.state.items[itemId].name).join('</span>, <span class="text-amber-200">') + '</span></p>';
         }
@@ -315,7 +316,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const displayItemInformation = (item: any) => {
         const textItemInformation = document.getElementById('item-information-div');
-        if (textItemInformation) textItemInformation.innerHTML = `<p><strong>${item.name}</strong></p><p>${item.description}</p>`;
+        if (textItemInformation) {
+            textItemInformation.innerHTML = `<p><strong>${item.name}</strong></p><p>${item.description}</p>`;
+
+            textItemInformation.innerHTML += `<p>Avg. Damage: ${item.avgDamage}</p>`;
+        }
     }
 
     const hideItemInformation = (index: number) => {

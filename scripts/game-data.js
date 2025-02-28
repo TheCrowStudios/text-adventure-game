@@ -1,6 +1,6 @@
 export const gameData = {
     startRoom: "village_outside",
-    inventory: ["torch"],
+    inventory: [], // put whatever starting items here
     rooms: {
         "home": {
             id: "home",
