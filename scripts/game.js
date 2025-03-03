@@ -178,6 +178,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const elementInput = document.getElementById('input-command');
     const inventory = document.getElementById('inventory');
     const invSize = 16;
+    const btnSaveGame = document.getElementById('btn-save-game');
+    const btnLastSave = document.getElementById('btn-last-save');
+    const btnMainMenu = document.getElementById('btn-main-menu');
+    const btnLogOut = document.getElementById('btn-log-out');
+    // btnSaveGame.addEventListener('click')
+    btnLastSave.addEventListener('click', () => {
+        confirmationPopup('Are you sure you want to load the last save? Any unsaved progress will be lost.', () => document.location = '/game');
+    });
+    btnMainMenu.addEventListener('click', () => {
+        confirmationPopup('Are you sure you want to exit to the main menu? Any unsaved progress will be lost.', () => document.location = '/game-menu');
+    });
+    btnLogOut.addEventListener('click', () => {
+        confirmationPopup('Are you sure you want to log out? Any unsaved progress will be lost.', () => {
+            document.cookie = 'username=; secure;';
+            document.location = '/login';
+        });
+    });
     (_a = document.getElementById('dir-n')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', () => setInputText('go north'));
     (_b = document.getElementById('dir-e')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', () => setInputText('go east'));
     (_c = document.getElementById('dir-s')) === null || _c === void 0 ? void 0 : _c.addEventListener('click', () => setInputText('go south'));
@@ -352,6 +369,18 @@ function setInputText(text) {
     const elementInput = document.getElementById('input-command');
     elementInput.value = text;
     elementInput.focus();
+}
+function confirmationPopup(text, callback) {
+    const txtMessage = document.getElementById('txt-confirmation-message');
+    const confirmation = document.getElementById('confirmation-popup');
+    const confirm = document.getElementById('btn-confirmation-confirm');
+    const cancel = document.getElementById('btn-confirmation-cancel');
+    txtMessage.textContent = text;
+    confirm.addEventListener('click', callback);
+    cancel.addEventListener('click', () => {
+        confirmation === null || confirmation === void 0 ? void 0 : confirmation.classList.add('-translate-y-[200%]', 'opacity-0', 'pointer-events-none');
+    });
+    confirmation === null || confirmation === void 0 ? void 0 : confirmation.classList.remove('-translate-y-[200%]', 'opacity-0', 'pointer-events-none');
 }
 if (!document.cookie.includes('username=user'))
     document.location = '/login';

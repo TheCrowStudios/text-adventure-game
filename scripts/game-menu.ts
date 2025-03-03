@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const newGame = () => {
-        document.location = '/game.html';
+        document.location = '/game';
     }
 
     btnNewGame.addEventListener('click', newGame);

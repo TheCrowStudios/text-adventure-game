@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (inpUsername.value === 'user' && inpPassword.value === 'password') {
             document.cookie = `username=${inpUsername.value}; Secure;`;
             console.log(`cookie: ${document.cookie}`);
-            document.location = '/game.html';
+            document.location = '/game';
         }
         else {
             error.textContent = 'Username or password incorrect';

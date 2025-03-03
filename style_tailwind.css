@@ -33,4 +33,8 @@
     .menu-button {
         @apply w-full aspect-square rounded-xl bg-(--bg-secondary) p-2 hover:opacity-70 border-2 border-(--bg-secondary) hover:border-(--text-highlight) hover:scale-105 transition-all duration-300 cursor-pointer disabled:pointer-events-none disabled:text-(--text-secondary);
     }
+
+    .button {
+        @apply w-full rounded-xl bg-(--bg-secondary) p-2 hover:opacity-70 border-2 border-(--bg-secondary) hover:border-(--text-highlight) transition-all duration-300 cursor-pointer disabled:pointer-events-none disabled:text-(--text-secondary);
+    }
 }

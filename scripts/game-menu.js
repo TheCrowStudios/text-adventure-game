@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         divSaveSlotActions.classList.add('translate-y-full', 'opacity-0');
     };
     const newGame = () => {
-        document.location = '/game.html';
+        document.location = '/game';
     };
     btnNewGame.addEventListener('click', newGame);
     btnBack.addEventListener('click', hideSlotActions);

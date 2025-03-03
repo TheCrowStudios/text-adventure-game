@@ -17,7 +17,8 @@
             <div
                 class="flex max-lg:relative items-center max-lg:order-2 max-lg:w-full max-lg:h-5/12 flex-col max-lg:flex-row w-3/12 h-full scrollbar gap-4 p-2">
                 <!-- inventory  -->
-                <div class="aspect-square object-cover lg:max-h-1/2 max-lg:max-h-full max-lg:max-w-1/2 lg:w-full max-lg:h-full">
+                <div
+                    class="aspect-square object-cover lg:max-h-1/2 max-lg:max-h-full max-lg:max-w-1/2 lg:w-full max-lg:h-full">
                     <div class="grid aspect-square object-cover max-lg:grid-cols-4 max-lg:grid-rows-4 max-w-full grid-cols-4 grid-rows-4 auto-cols-max"
                         id="inventory">
                     </div>
@@ -76,7 +77,7 @@
                                 class="flex-grow p-2 bg-(--bg-tertiary) text-(--text-tertiary) rounded-xl outline-black"
                                 id="input-command">
                             <button
-                                class="rounded-xl bg-(--bg-secondary) p-2 hover:opacity-70 border-2 border-(--bg-secondary) hover:border-(--text-highlight) transition-all duration-300"
+                                class="rounded-xl bg-(--bg-secondary) px-4 hover:opacity-70 border-2 border-(--bg-secondary) hover:border-(--text-highlight) transition-all duration-300"
                                 type="submit">Run</button>
                         </form>
                     </div>
@@ -84,15 +85,37 @@
             </div>
 
             <!-- col 3 -->
-            <div class="max-lg:order-1 max-lg:w-full max-lg:h-1/12 flex-col w-3/12">
+            <div class="max-lg:order-1 max-lg:w-full max-lg:h-1/12 flex flex-col w-3/12">
                 <!-- character stats like health, hunger, armor -->
                 <div>
                     <p>Health: 100</p>
                     <p>Armor: 20</p>
                 </div>
 
+                <br>
+
                 <!-- item information -->
                 <div id="item-information-div">
+                </div>
+
+                <!-- separator -->
+                <span class="flex-grow"></span>
+
+                <div class="flex flex-col gap-2">
+                    <button class="button" id="btn-save-game">Save Game</button>
+                    <button class="button" id="btn-last-save">Quick Load To Last Save</button>
+                    <button class="button" id="btn-main-menu">Exit To Main Menu</button>
+                    <button class="button" id="btn-log-out">Log Out</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="absolute left-0 top-0 -translate-y-[200%] opacity-0 w-full h-full flex justify-center transition-all duration-300 pointer-events-none" id="confirmation-popup">
+            <div class="self-center h-[50vh] max-w-screen aspect-4/3 bg-(--bg-primary) shadow-xl rounded-xl p-4 flex flex-col justify-center text-center gap-2">
+                <span class="text-3xl" id="txt-confirmation-message">Confirmation Text</span>
+                <div class="flex flex-row gap-2">
+                    <button class="button text-3xl" id="btn-confirmation-confirm">Yes</button>
+                    <button class="button text-3xl" id="btn-confirmation-cancel">No</button>
                 </div>
             </div>
         </div>
