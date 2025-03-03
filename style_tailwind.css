@@ -1,12 +1,14 @@
 @import "tailwindcss";
 
 @theme {
-    --bg-primary: oklch(0.216 0.006 56.043);
-    --bg-secondary: oklch(0.374 0.01 67.558);
+    --bg-primary: oklch(0.13 0.028 261.692);
+    /* oklch(0.216 0.006 56.043); */
+    --bg-secondary: oklch(0.37 0.013 285.805);
+    /* oklch(0.374 0.01 67.558); */
     --bg-tertiary: oklch(0.922 0 0);
     --text-primary: oklch(0.922 0 0);
     --text-secondary: oklch(0.87 0 0);
-    --text-secondary: oklch(0.87 0 0);
+    --text-secondary: oklch(0.708 0 0);
     --text-tertiary: oklch(0.205 0 0);
     --text-highlight: oklch(0.705 0.213 47.604);
 }
@@ -26,5 +28,9 @@
 
     .pixel-art {
         image-rendering: pixelated;
+    }
+
+    .menu-button {
+        @apply w-full aspect-square rounded-xl bg-(--bg-secondary) p-2 hover:opacity-70 border-2 border-(--bg-secondary) hover:border-(--text-highlight) hover:scale-105 transition-all duration-300 cursor-pointer disabled:pointer-events-none disabled:text-(--text-secondary);
     }
 }

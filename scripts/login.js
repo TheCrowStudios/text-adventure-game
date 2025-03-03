@@ -20,3 +20,5 @@ document.addEventListener('DOMContentLoaded', () => {
         ;
     });
 });
+if (document.cookie.includes('username=user'))
+    document.location = '/game-menu';
