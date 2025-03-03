@@ -353,3 +353,5 @@ function setInputText(text) {
     elementInput.value = text;
     elementInput.focus();
 }
+if (!document.cookie.includes('username=user'))
+    document.location = '/login';
