@@ -1,10 +1,10 @@
 export const gameData = {
-    startRoom: "village_outside", // starting room
+    startRoom: "home", // starting room
     health: 20,
     maxHealth: 20,
     armor: 0,
     inCombat: false, // do not change
-    inventory: ["dagger"], // put whatever starting items here
+    inventory: [], // put whatever starting items here
     rooms: {
         "home": {
             id: "home",
