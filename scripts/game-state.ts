@@ -1,3 +1,9 @@
+interface Character {
+    health: number;
+    maxHealth: number;
+    armor: number;
+}
+
 interface GameObject {
     id: string;
     name: string;
@@ -23,9 +29,11 @@ interface Enemy extends GameObject {
     health: number;
     avgDamage: number; // base damage
     damageRange: number; // how much the damage can deviate from the average damage
+    canRun: boolean; // whether the player can run from the fight to the previous room
 }
 
 export class GameState {
+    character: Character = {health: 20, maxHealth: 20, armor: 0};
     inventorySize: number;
     rooms: Record<string, Room> = {};
     items: Record<string, Item> = {};
@@ -33,6 +41,8 @@ export class GameState {
     currentRoomId: string = 'start';
     inventory: string[];
     inCombat: boolean = false;
+    canRun: boolean = false;
+    previousRoom: string = '';
 
     /**
      *
@@ -48,6 +58,7 @@ export class GameState {
      * @param gameData the game data object
      */
     loadGameData(gameData: any) {
+        this.character = gameData.character || {health: 20, maxHealth: 20, armor: 0};
         this.rooms = gameData.rooms || {};
         this.items = gameData.items || {};
         this.enemies = gameData.enemies || {};

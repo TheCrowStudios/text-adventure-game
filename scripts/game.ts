@@ -38,12 +38,15 @@ class GameEngine {
 
     output: (text: string) => Promise<void>;
     updateCompass: (compass: string[]) => void;
+    displayCharacterStats: () => void;
 
-    constructor(gameData: any, outputFunction: (text: string) => Promise<void>, updateCompass: (directions: string[]) => void, invSize: number) {
+    constructor(gameData: any, outputFunction: (text: string) => Promise<void>, updateCompass: (directions: string[]) => void, displayCharacterStats: () => void, invSize: number) {
         this.invSize = invSize;
         this.state = new GameState(gameData, invSize);
         this.output = outputFunction;
         this.updateCompass = updateCompass;
+        this.displayCharacterStats = displayCharacterStats;
+        this.setupEvents();
     }
 
     async displayCurrentRoom() {
@@ -72,6 +75,7 @@ class GameEngine {
             description += `<p>Name: <strong>${enemy.description}</strong></p>`;
             description += `<p>Average damage: <strong>${enemy.avgDamage}</strong></p>`;
             description += `<br>`;
+            description += `<p><strong>&lt;----- Your turn! -----&gt;</strong></p>`;
             description += `<p>What do you do? (attack, defend, use &lt;item&gt;, run)</p>`;
         }
         // description +=  `${Object.keys(room.exits).join(', ')}</p>`
@@ -79,6 +83,10 @@ class GameEngine {
         await this.output(description);
         this.updateCompass(Object.keys(room.exits));
         events.dispatchEvent({ type: 'inventoryUpdated', payload: {} });
+    }
+
+    setupEvents() {
+
     }
 
     async help() {
@@ -118,7 +126,11 @@ class GameEngine {
                 else this.printInCombatWarning();
                 break;
             case 'attack':
-                this.attack(noun);
+                this.attack();
+                break;
+            case 'run':
+                this.run();
+                break;
             case 'help':
                 this.help();
                 break;
@@ -128,7 +140,7 @@ class GameEngine {
         }
     }
 
-    async attack(noun: string) {
+    async attack() {
         if (!this.state.inCombat) {
             await this.output('<p>You must be in combat to attack!</p>');
             return;
@@ -148,6 +160,31 @@ class GameEngine {
         }
     }
 
+    async run() {
+        if (!this.state.inCombat) {
+            await this.output('<p>You must be in combat to run</p>');
+            return;
+        }
+
+        if (!this.state.canRun) {
+            await this.output(`<p>You can't run!</p>`);
+            return;
+        }
+
+        const roomId = this.state.currentRoomId;
+        const room = this.state.getCurrentRoom();
+        Object.keys(room.exits).forEach(direction => {
+            if (room.exits[direction] === this.state.previousRoom) {
+                this.goDirection(direction);
+                this.displayCurrentRoom();
+            }
+        })
+
+        if (roomId === this.state.currentRoomId) {
+            await this.output(`<p>Could not run!</p>`);
+        }
+    }
+
     async printInCombatWarning() {
         await this.output('<p>You cannot do that while in combat!</p>');
     }
@@ -155,6 +192,8 @@ class GameEngine {
     async goDirection(direction: string) {
         const room = this.state.getCurrentRoom();
         let exitId;
+
+        this.state.previousRoom = this.state.currentRoomId;
 
         if (room.exits[direction]) {
             exitId = direction;
@@ -186,6 +225,8 @@ class GameEngine {
         if (roomAtExit.enemies.length > 0) {
             console.log('in combat');
             this.state.inCombat = true;
+            const enemy = this.state.getEnemyInRoom()
+            if (enemy && enemy.canRun) this.state.canRun = true;
         }
 
         this.state.currentRoomId = room.exits[exitId]; // set current room
@@ -415,12 +456,20 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     }
 
+    const displayCharacterStats = () => {
+        const textCharacterStats = document.getElementById('character-stats-div');
+        if (textCharacterStats) {
+            textCharacterStats.innerHTML = `<p>Health: <strong>${game.state.character.health}/${game.state.character.maxHealth}</strong></p>`;
+            textCharacterStats.innerHTML += `<p>Armor: <strong>${game.state.character.armor}</strong></p>`;
+        }
+    }
+
     const displayItemInformation = (item: any) => {
         const textItemInformation = document.getElementById('item-information-div');
         if (textItemInformation) {
             textItemInformation.innerHTML = `<p><strong>${item.name}</strong></p><p>${item.description}</p>`;
 
-            textItemInformation.innerHTML += `<p>Avg. Damage: ${item.avgDamage}</p>`;
+            textItemInformation.innerHTML += `<p>Avg. Damage: <strong>${item.avgDamage}</strong></p>`;
         }
     }
 
@@ -506,8 +555,9 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     }
 
-    game = new GameEngine(gameData, appendOutput, updateCompass, invSize);
+    game = new GameEngine(gameData, appendOutput, updateCompass, displayCharacterStats, invSize);
     game.displayCurrentRoom();
+    displayCharacterStats();
 })
 
 /**

@@ -1,7 +1,10 @@
 export const gameData = {
-    startRoom: "home", // starting room
+    startRoom: "village_outside", // starting room
+    health: 20,
+    maxHealth: 20,
+    armor: 0,
     inCombat: false, // do not change
-    inventory: [], // put whatever starting items here
+    inventory: ["dagger"], // put whatever starting items here
     rooms: {
         "home": {
             id: "home",
@@ -82,7 +85,8 @@ export const gameData = {
             description: "*little goblin runs past* woah what the hell did you see that",
             health: 12,
             avgDamage: 2,
-            damageRange: 1
+            damageRange: 1,
+            canRun: true // whether the player can run from the fight to the previous room
         }
     }
 };

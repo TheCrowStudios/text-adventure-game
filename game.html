@@ -18,7 +18,7 @@
                 class="flex max-lg:relative items-center max-lg:order-2 max-lg:w-full max-lg:h-5/12 flex-col max-lg:flex-row w-3/12 h-full scrollbar gap-4 p-2">
                 <!-- inventory  -->
                 <div
-                    class="aspect-square object-cover lg:max-h-1/2 max-lg:max-h-full max-lg:max-w-1/2 lg:w-full max-lg:h-full">
+                    class="aspect-square object-cover lg:max-h-1/2 max-lg:max-h-full max-lg:max-w-1/2 lg:h-full lg:max-h-full lg:max-w-full max-lg:h-full">
                     <div class="grid aspect-square object-cover max-lg:grid-cols-4 max-lg:grid-rows-4 max-w-full grid-cols-4 grid-rows-4 auto-cols-max"
                         id="inventory">
                     </div>
@@ -29,7 +29,7 @@
                 <!-- compass -->
                 <span class="text-xl font-bold max-lg:hidden">Available exits:</span>
                 <div
-                    class="relative max-lg:right-0 max-lg:-translate-x-1/2 max-lg:h-full lg:w-full max-h-1/2 aspect-square items-center text-xl font-bold p-2">
+                    class="relative max-lg:right-0 max-lg:-translate-x-1/2 max-lg:h-full lg:h-full lg:max-w-full lg:max-h-full max-h-1/2 aspect-square items-center text-xl font-bold p-2">
                     <div class="top-0 left-1/2 absolute transform -translate-x-1/2 cursor-pointer hover:text-(--text-highlight) w-full h-8"
                         id="dir-n">
                         <span
@@ -57,7 +57,7 @@
             <div class="max-lg:order-3 max-lg:w-full max-lg:h-6/12 flex flex-col w-6/12 gap-4">
                 <!-- game window -->
                 <div
-                    class="aspect-4/3 max-h-6/12 border-2 border-(--bg-tertiary) bg-[url(/images/castle-landscape.png)] bg-cover bg-center">
+                    class="aspect-4/3 max-h-6/12 border-2 border-(--bg-tertiary) bg-[url(/images/castle-landscape-placeholder.png)] bg-cover bg-center">
                 </div>
 
                 <!-- command input and game output -->
@@ -87,9 +87,9 @@
             <!-- col 3 -->
             <div class="max-lg:order-1 max-lg:w-full max-lg:h-1/12 flex flex-col w-3/12">
                 <!-- character stats like health, hunger, armor -->
-                <div>
-                    <p>Health: 100</p>
-                    <p>Armor: 20</p>
+                <div id="character-stats-div">
+                    <p>Health: <strong>100</strong></p>
+                    <p>Armor: <strong>20</strong></p>
                 </div>
 
                 <br>

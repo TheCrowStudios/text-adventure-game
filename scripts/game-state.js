@@ -3,11 +3,14 @@ export class GameState {
      *
      */
     constructor(gameData, inventorySize) {
+        this.character = { health: 20, maxHealth: 20, armor: 0 };
         this.rooms = {};
         this.items = {};
         this.enemies = {};
         this.currentRoomId = 'start';
         this.inCombat = false;
+        this.canRun = false;
+        this.previousRoom = '';
         this.inventory = new Array(inventorySize).fill(''); // initialize array with no items
         this.loadGameData(gameData);
         this.inventorySize = inventorySize;
@@ -17,6 +20,7 @@ export class GameState {
      * @param gameData the game data object
      */
     loadGameData(gameData) {
+        this.character = gameData.character || { health: 20, maxHealth: 20, armor: 0 };
         this.rooms = gameData.rooms || {};
         this.items = gameData.items || {};
         this.enemies = gameData.enemies || {};
