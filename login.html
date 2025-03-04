@@ -13,22 +13,23 @@
     <main class="w-8/12 max-lg:w-screen h-screen text-(--text-primary) p-4">
         <div class="flex flex-col w-full h-full justify-center items-center">
             <div
-                class="flex justify-center items-center w-[30rem] bg-(--bg-secondary) h-80 rounded-xl shadow-xl max-w-full max-h-full">
+                class="flex justify-center items-center w-[30rem] bg-(--bg-secondary) h-fit rounded-xl shadow-xl max-w-full max-h-full py-8">
                 <form action="" class="flex flex-col gap-4 w-80" id="form-login">
                     <div>
                         <p>Username</p>
                         <input type="text" name="username"
-                            class="bg-(--bg-tertiary) rounded-xl px-2 py-1 text-(--text-tertiary) w-full" id="input-username">
+                            class="bg-(--bg-tertiary) rounded-xl px-2 py-1 text-(--text-tertiary) w-full" id="input-username" required>
                     </div>
                     <div>
                         <p>Password</p>
                         <input type="password" name="password"
-                            class="bg-(--bg-tertiary) rounded-xl px-2 py-1 text-(--text-tertiary) w-full" id="input-password">
+                            class="bg-(--bg-tertiary) rounded-xl px-2 py-1 text-(--text-tertiary) w-full" id="input-password" required>
                     </div>
                     <button
                         class="rounded-xl bg-(--bg-primary) p-2 hover:opacity-70 border-2 border-(--bg-secondary) hover:border-(--text-highlight) transition-all duration-300 cursor-pointer"
                         id="button-login" type="submit">Log In</button>
                         <span class="text-red-500 hidden" id="error"></span>
+                        <span>Don't have an account? Register <a href="/register" class="link">here</a>.</span>
                 </form>
             </div>
             <span>Username is user and password is password btw :3</span>

@@ -37,4 +37,8 @@
     .button {
         @apply w-full rounded-xl bg-(--bg-secondary) p-2 hover:opacity-70 border-2 border-(--bg-secondary) hover:border-(--text-highlight) transition-all duration-300 cursor-pointer disabled:pointer-events-none disabled:text-(--text-secondary);
     }
+
+    .link {
+        @apply text-blue-300 hover:underline hover:text-blue-400 transition-all;
+    }
 }
