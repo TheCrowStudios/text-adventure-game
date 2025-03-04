@@ -32,6 +32,7 @@ export class GameState {
     enemies: Record<string, Enemy> = {};
     currentRoomId: string = 'start';
     inventory: string[];
+    inCombat: boolean = false;
 
     /**
      *
@@ -63,5 +64,9 @@ export class GameState {
 
     getItemFromInventoryIndex(index: number) {
         return this.items[this.inventory[index]];
+    }
+
+    getEnemyInRoom() {
+        return this.getCurrentRoom().enemies.length > 0 ? this.enemies[this.getCurrentRoom().enemies[0]] : null;
     }
 }

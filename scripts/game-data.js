@@ -1,11 +1,12 @@
 export const gameData = {
-    startRoom: "village_outside",
+    startRoom: "home", // starting room
+    inCombat: false, // do not change
     inventory: [], // put whatever starting items here
     rooms: {
         "home": {
             id: "home",
             name: "Your home",
-            description: "A house that is almost falling apart, but you can't do much about it since you're just a simple peasant, like everyone else here.", // TODO - dynamic description based on game stage, such as start of game, mid game, end game, perhaps?
+            description: "You wake up in your house that is almost falling apart, but you can't do much about it since you're just a simple peasant, like everyone else here.", // TODO - dynamic description based on game stage, such as start of game, mid game, end game, perhaps?
             exits: { "e": "village_outside" },
             items: ["torch"],
             enemies: []
@@ -13,7 +14,7 @@ export const gameData = {
         "village_outside": {
             id: "village_outside",
             name: "The village square",
-            description: "The village square. It's pretty dirty, and smells of farm animals, but you're used to it. It's sunny out here.", // TODO - dynamic weather which affects certain things like combat?
+            description: "The village square. It's pretty dirty, but hey, at least it's sunny out here. Today's a beautiful day.", // TODO - dynamic weather which affects certain things like combat?
             exits: { "w": "home", "n": "village_outskirts_n", "e": "village_blacksmith" },
             items: [],
             enemies: []
@@ -32,8 +33,8 @@ export const gameData = {
             description: "A beautiful field with lush green grass",
             exits: { "n": "village_forest", "s": "village_outside" },
             items: [],
-            enemies: [],
-            requiredItems: ["dagger"]
+            enemies: ["goblin_regular"], // so far only works with one enemy at most per room.
+            requiredItems: ["dagger"] // require the dagger item to enter this room.
         },
         "village_forest": {
             id: "village_forest",
@@ -41,7 +42,7 @@ export const gameData = {
             description: "A dense forest n of the village outskirts",
             exits: { "s": "village_outskirts_n" },
             items: [],
-            enemies: ["goblin_regular"]
+            enemies: []
         }
     },
     items: {

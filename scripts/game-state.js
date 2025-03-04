@@ -7,6 +7,7 @@ export class GameState {
         this.items = {};
         this.enemies = {};
         this.currentRoomId = 'start';
+        this.inCombat = false;
         this.inventory = new Array(inventorySize).fill(''); // initialize array with no items
         this.loadGameData(gameData);
         this.inventorySize = inventorySize;
@@ -30,5 +31,8 @@ export class GameState {
     }
     getItemFromInventoryIndex(index) {
         return this.items[this.inventory[index]];
+    }
+    getEnemyInRoom() {
+        return this.getCurrentRoom().enemies.length > 0 ? this.enemies[this.getCurrentRoom().enemies[0]] : null;
     }
 }
