@@ -1,0 +1,2 @@
+empty:bg-[url(/images/inventory/melee_slot.png)]
+empty:bg-[url(/images/inventory/armor_chestplate_slot.png)]

@@ -1,7 +1,6 @@
 interface Character {
     health: number;
     maxHealth: number;
-    armor: number;
 }
 
 interface GameObject {
@@ -21,8 +20,10 @@ interface Item extends GameObject {
     canTake: boolean;
     useEffect?: string; // optional, the effect when used
     img?: string;
+    type: string;
     avgDamage?: number;
     damageRange?: number;
+    armor?: number;
 }
 
 interface Enemy extends GameObject {
@@ -32,14 +33,20 @@ interface Enemy extends GameObject {
     canRun: boolean; // whether the player can run from the fight to the previous room
 }
 
+interface InvSlot {
+    type: string;
+    itemId: string;
+    slotImg?: string;
+}
+
 export class GameState {
-    character: Character = {health: 20, maxHealth: 20, armor: 0};
+    character: Character = {health: 20, maxHealth: 20};
     inventorySize: number;
     rooms: Record<string, Room> = {};
     items: Record<string, Item> = {};
     enemies: Record<string, Enemy> = {};
     currentRoomId: string = 'start';
-    inventory: string[];
+    inventory: InvSlot[];
     inCombat: boolean = false;
     canRun: boolean = false;
     previousRoom: string = '';
@@ -63,10 +70,7 @@ export class GameState {
         this.items = gameData.items || {};
         this.enemies = gameData.enemies || {};
         this.currentRoomId = gameData.startRoom || 'start';
-
-        gameData.inventory.forEach((itemId: any, i: number) => {
-            if (itemId) this.inventory[i] = itemId;
-        })
+        this.inventory = gameData.inventory;
     }
 
     getCurrentRoom(): Room {
@@ -74,10 +78,36 @@ export class GameState {
     }
 
     getItemFromInventoryIndex(index: number) {
-        return this.items[this.inventory[index]];
+        return this.items[this.inventory[index].itemId];
     }
 
     getEnemyInRoom() {
         return this.getCurrentRoom().enemies.length > 0 ? this.enemies[this.getCurrentRoom().enemies[0]] : null;
+    }
+
+    getItemById(itemId: string): Item {
+        return this.items[itemId];
+    }
+
+    /**
+     * returns the total character armor
+     */
+    getCharacterArmor(): number {
+        let armor = 0;
+
+        this.inventory.forEach(slot => {
+            if (slot.type.startsWith('armor')) {
+                const itemInSlot = this.getItemById(slot.itemId);
+                if (itemInSlot && itemInSlot.armor) armor += itemInSlot.armor;
+            }
+        })
+
+        return armor;
+    }
+
+    takeItem() {}
+
+    getMelee() {
+        return this.inventory[0].itemId !== '' ? this.items[this.inventory[0].itemId] : null; // first item in inventory is the equipped melee item
     }
 }

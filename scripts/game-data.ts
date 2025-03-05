@@ -2,9 +2,12 @@ export const gameData = {
     startRoom: "home", // starting room
     health: 20,
     maxHealth: 20,
-    armor: 0,
     inCombat: false, // do not change
-    inventory: [], // put whatever starting items here
+    inventory: [{ type: 'melee', itemId: '', slotImg: '' }, { type: 'armor-chestplate', itemId: '', slotImg: '' }, { type: 'armor-helmet', itemId: '' }, { type: 'armor-leggings', itemId: '' },
+    { type: 'armor-boots', itemId: '' }, { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' },
+    { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' },
+    { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' },
+    ], // put whatever starting items here
     rooms: {
         "home": {
             id: "home",
@@ -27,7 +30,7 @@ export const gameData = {
             name: "Blacksmith",
             description: "The local village blacksmith",
             exits: { "w": "village_outside" },
-            items: ["dagger"],
+            items: ["dagger", "steel_chestplate"],
             enemies: []
         },
         "village_outskirts_n": {
@@ -55,7 +58,8 @@ export const gameData = {
             description: "A wooden torch that provides light where there is a lack of it",
             canTake: true,
             useEffect: "light", // TODO - give item types, such as weapon, food, or armor, etc
-            img: "torch.png" // NOTE - images for items must be placed under /images/items/nameofimage
+            img: "torch.png", // NOTE - images for items must be placed under /images/items/nameofimage
+            type: "item"
         },
         "dagger": {
             id: "dagger",
@@ -64,6 +68,7 @@ export const gameData = {
             canTake: true,
             useEffect: "attack",
             img: "dagger.png",
+            type: "melee",
             avgDamage: 4,
             damageRange: 1
         },
@@ -74,9 +79,21 @@ export const gameData = {
             canTake: true,
             useEffect: "attack",
             img: "sword.png",
+            type: "melee",
             avgDamage: 8,
             damageRange: 3
+        },
+        "steel_chestplate": {
+            id: "steel_chestplate",
+            name: "Chestplate",
+            description: "Steel Chestplate. A solid peace of armor to protect you against things, it's kinda heavy",
+            canTake: true,
+            useEffect: "attack",
+            img: "steel_chestplate.png",
+            type: "armor-chestplate",
+            armor: 10
         }
+
     },
     enemies: {
         "goblin_regular": {

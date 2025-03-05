@@ -66,7 +66,7 @@
                     <div class="overflow-y-scroll w-full bg-(--bg-secondary) rounded-xl p-4 flex-grow basis-0 scrollbar"
                         id="game-output">
                         <p>Welcome to the game!</p>
-                        <p>Type help for a list of commands.</p>
+                        <p>Type <span class="font-bold command">help</span> for a list of commands.</p>
                         <br>
                     </div>
 
@@ -101,6 +101,12 @@
                 <!-- separator -->
                 <span class="flex-grow"></span>
 
+                <!-- character -->
+                <div class="relative w-full h-fit" id="character">
+                    <img src="/images/character.webp" alt="" class="left-0 top-0 translate-x-1/2">
+                </div>
+
+                <!-- action buttons -->
                 <div class="flex flex-col gap-2">
                     <button class="button" id="btn-save-game">Save Game</button>
                     <button class="button" id="btn-last-save">Quick Load To Last Save</button>
