@@ -191,6 +191,7 @@ class GameEngine {
         if (roomAtExit.enemies.length > 0) {
             console.log('in combat');
             this.state.inCombat = true;
+            events.dispatchEvent({ type: 'enterCombat', payload: {} });
             const enemy = this.state.getEnemyInRoom();
             if (enemy && enemy.canRun)
                 this.state.canRun = true;
@@ -211,9 +212,10 @@ class GameEngine {
             return;
         }
         let itemTaken = false;
-        room.items.forEach(async (item, i) => {
+        for (let i = 0; i < room.items.length; i++) {
             if (itemTaken)
                 return;
+            const item = room.items[i];
             let selectedItem = this.state.getItemById(item);
             if (selectedItem && selectedItem.name.toLowerCase() === noun.toLowerCase()) { // check if item in room matches noun
                 if (this.addItemToInventory(item)) {
@@ -224,7 +226,7 @@ class GameEngine {
                 }
                 await this.output('<p>Not enough space in inventory!</p>');
             }
-        });
+        }
         if (!itemTaken)
             await this.output(`<p>Could not pick up <strong>${noun}</strong></p>`);
     }
@@ -294,8 +296,9 @@ class GameEngine {
         if (sourceItem.type !== 'item' && (destinationSlot.type !== 'storage' && sourceItem.type !== destinationSlot.type)) {
             sourceItemFitsDestinationSlotType = false;
         }
+        // TODO - this is so janky, but it works, y'all could do this better
         // check if swapping items would cause an item to be placed in a mismatching slot, if it will, move source item to first empty slot of storage type (eg. swapping a sword with a torch)
-        if (destinationItem && destinationItem.type === 'item' && sourceSlot.type !== 'storage') {
+        if (destinationItem && ((destinationItem.type === 'item' && sourceSlot.type !== 'storage') || (destinationItem.type !== 'item' && sourceSlot.type !== 'storage' && destinationItem.type !== sourceSlot.type))) {
             destinationItemFitsSourceSlotType = false;
         }
         if (!sourceItemFitsDestinationSlotType) {
