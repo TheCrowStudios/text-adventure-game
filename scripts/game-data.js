@@ -3,10 +3,10 @@ export const gameData = {
     health: 20,
     maxHealth: 20,
     inCombat: false, // do not change
-    inventory: [{ type: 'melee', itemId: '', slotImg: '' }, { type: 'armor-chestplate', itemId: '', slotImg: '' }, { type: 'armor-helmet', itemId: '' }, { type: 'armor-leggings', itemId: '' },
-        { type: 'armor-boots', itemId: '' }, { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' },
+    inventory: [{ type: 'melee', itemId: '', slotImg: 'melee_slot.png' }, { type: 'armor-chestplate', itemId: '', slotImg: 'armor_chestplate_slot.png' }, { type: 'armor-helmet', itemId: '', slotImg: 'armor_helmet_slot.png' }, { type: 'armor-leggings', itemId: '', slotImg: 'armor_leggings_slot.png' },
+        { type: 'armor-boots', itemId: '', slotImg: 'armor_boots_slot.png' }, { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' },
         { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' },
-        { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' },
+        { type: 'storage', itemId: '' }
     ], // put whatever starting items here
     rooms: {
         "home": {

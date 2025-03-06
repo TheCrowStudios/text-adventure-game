@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@source "safelist.txt"
 
 @theme {
     --bg-primary: oklch(0.13 0.028 261.692);
