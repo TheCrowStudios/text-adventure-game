@@ -94,9 +94,14 @@ class GameEngine {
 
     async help() {
         let helpText = `<p><strong>List of commands:</strong></p>`;
-        helpText += `<p><strong>go/move/m {direction}: </strong>go to exit in specified direction</p>`;
-        helpText += `<p><strong>look: </strong>look around at the room again</p>`;
-        helpText += `<p><strong>help: </strong>this</p>`;
+        helpText += `<p><span class="command">go/move/m {direction}</span>: go to exit in specified direction</p>`;
+        helpText += `<p><span class="command">look</span>: look around at the room again</p>`;
+        helpText += `<p><span class="command">take/grab/get {item}</span>: take an item</p>`;
+        helpText += `<p><span class="command">help</span>: this</p>`;
+        helpText += `<p><span class="command">loot</span>: loot an enemy/p>`;
+        helpText += `<p><strong>Combat commands:</strong></p>`;
+        helpText += `<p><span class="command">attack</span>: attack an enemy with equipped melee</p>`;
+        helpText += `<p><span class="command">run</span>: retreat from combat to the previous room if it's possible</p>`;
         await this.output(helpText);
     }
 
@@ -117,8 +122,6 @@ class GameEngine {
             case 'take':
             case 'grab':
             case 'get':
-            case 'g':
-            case 'loot':
                 if (this.state.gameState !== 'combat') this.takeItem(noun);
                 else this.printInCombatWarning();
                 break;
@@ -146,6 +149,8 @@ class GameEngine {
                 break;
             case 'run':
                 this.run();
+                break;
+            case 'loot':
                 break;
             case 'help':
                 this.help();
