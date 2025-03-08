@@ -325,7 +325,7 @@ class GameEngine {
         this.state.inventory.forEach((slot) => {
             const item = this.state.getItemById(slot.itemId);
             if (item) {
-                items += `<p>- ${item.name}`;
+                items += `<p>- ${item.name}</p>`;
                 totalItems += 1;
             }
         });

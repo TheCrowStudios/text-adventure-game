@@ -369,7 +369,7 @@ class GameEngine {
             const item = this.state.getItemById(slot.itemId);
 
             if (item) {
-                items += `<p>- ${item.name}`;
+                items += `<p>- ${item.name}</p>`;
                 totalItems += 1;
             }
         });
