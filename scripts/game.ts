@@ -125,6 +125,9 @@ class GameEngine {
             case 'use':
                 // this.useItem(noun);
                 break;
+            case 'inventory':
+                this.printInventory();
+                break;
             case 'look':
                 if (this.state.gameState !== 'combat') this.displayCurrentRoom();
                 else this.printInCombatWarning();
@@ -234,7 +237,7 @@ class GameEngine {
 
             enemy.dead = true;
             this.state.gameState = 'normal';
-            events.dispatchEvent({type: 'enemyKilled', payload: {enemyId: enemy.id}});
+            events.dispatchEvent({ type: 'enemyKilled', payload: { enemyId: enemy.id } });
         }
     }
 
@@ -354,6 +357,26 @@ class GameEngine {
         }
 
         if (!itemTaken) await this.output(`<p>Could not pick up <strong>${noun}</strong></p>`);
+    }
+
+    /**
+     * outputs the contents of the inventory in text format
+     */
+    async printInventory() {
+        let items = '<p>Inventory:<p>';
+        let totalItems = 0;
+        this.state.inventory.forEach((slot) => {
+            const item = this.state.getItemById(slot.itemId);
+
+            if (item) {
+                items += `<p>- ${item.name}`;
+                totalItems += 1;
+            }
+        });
+
+        if (totalItems === 0) items += '<p>There are no items in your inventory.</p>';
+
+        await this.output(items);
     }
 
     /**
