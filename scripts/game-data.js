@@ -1,9 +1,10 @@
 export const gameData = {
-    startRoom: "home", // starting room
+    startRoom: "village_outside", // starting room
     health: 20,
     maxHealth: 20,
     inCombat: false, // do not change
-    inventory: [{ type: 'melee', itemId: '', slotImg: 'melee_slot.png' }, { type: 'armor-chestplate', itemId: '', slotImg: 'armor_chestplate_slot.png' }, { type: 'armor-helmet', itemId: '', slotImg: 'armor_helmet_slot.png' }, { type: 'armor-leggings', itemId: '', slotImg: 'armor_leggings_slot.png' },
+    gameState: 'normal', // the state, one of: normal, combat, dead
+    inventory: [{ type: 'melee', itemId: 'dagger', slotImg: 'melee_slot.png' }, { type: 'armor-chestplate', itemId: '', slotImg: 'armor_chestplate_slot.png' }, { type: 'armor-helmet', itemId: '', slotImg: 'armor_helmet_slot.png' }, { type: 'armor-leggings', itemId: '', slotImg: 'armor_leggings_slot.png' },
         { type: 'armor-boots', itemId: '', slotImg: 'armor_boots_slot.png' }, { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' },
         { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' },
         { type: 'storage', itemId: '' }
@@ -40,7 +41,8 @@ export const gameData = {
             exits: { "n": "village_forest", "s": "village_outside" },
             items: [],
             enemies: ["goblin_regular"], // so far only works with one enemy at most per room.
-            requiredItems: ["dagger"] // require the dagger item to enter this room.
+            requiredItems: ["dagger"], // require the dagger item to enter this room.
+            canRun: true
         },
         "village_forest": {
             id: "village_forest",
@@ -100,9 +102,16 @@ export const gameData = {
             name: "Regular goblin",
             description: "*little goblin runs past* woah what the hell did you see that",
             health: 12,
+            maxHealth: 12,
             avgDamage: 2,
             damageRange: 1,
-            canRun: true // whether the player can run from the fight to the previous room
+            canRun: true, // whether the player can run from the fight to the previous room
+            items: ["steel_sword"],
+            dead: false,
+            meleeBlockChance: 0.2, // the chance that the enemy blocks your attack
+            blockMessages: ["The goblin evades your attack", "The goblin blocks your attack"],
+            attackMessages: ["The goblin charges at you with with a sword", "The goblin scratches you"],
+            deathMessages: ["The goblin drops dead on the ground with a screech... I should take his sword..."]
         }
     }
 };

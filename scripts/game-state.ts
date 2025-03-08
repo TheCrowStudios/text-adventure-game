@@ -13,6 +13,7 @@ interface Room extends GameObject {
     exits: Record<string, string>; // direction, roomId
     items: string[]; // item ids
     enemies: string[]; // enemy ids
+    canRun?: boolean; // whether the player can run from a fight to the previous room
     requiredItems?: string[];
 }
 
@@ -28,9 +29,15 @@ interface Item extends GameObject {
 
 interface Enemy extends GameObject {
     health: number;
+    maxHealth: number;
     avgDamage: number; // base damage
     damageRange: number; // how much the damage can deviate from the average damage
-    canRun: boolean; // whether the player can run from the fight to the previous room
+    items: string[]; // lootable item ids
+    dead: boolean;
+    meleeBlockChance: number;
+    blockMessages: string[];
+    attackMessages: string[];
+    deathMessages?: string[]; // the message that is output when you kill the enemy
 }
 
 interface InvSlot {
@@ -47,9 +54,8 @@ export class GameState {
     enemies: Record<string, Enemy> = {};
     currentRoomId: string = 'start';
     inventory: InvSlot[];
-    inCombat: boolean = false;
-    canRun: boolean = false;
     previousRoom: string = '';
+    gameState: string = 'default';
 
     /**
      *

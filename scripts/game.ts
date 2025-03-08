@@ -1,5 +1,6 @@
 import { GameState } from "./game-state.js";
 import { gameData } from "./game-data.js";
+import { HelperFunctions } from "./helper-functions.js";
 
 type GameEvent = {
     type: string;
@@ -37,13 +38,11 @@ class GameEngine {
     state: GameState;
 
     output: (text: string) => Promise<void>;
-    displayCharacterStats: () => void;
 
-    constructor(gameData: any, outputFunction: (text: string) => Promise<void>, displayCharacterStats: () => void, invSize: number) {
+    constructor(gameData: any, outputFunction: (text: string) => Promise<void>, invSize: number) {
         this.invSize = invSize;
         this.state = new GameState(gameData, invSize);
         this.output = outputFunction;
-        this.displayCharacterStats = displayCharacterStats;
         this.setupEvents();
     }
 
@@ -52,8 +51,11 @@ class GameEngine {
         const keys = Object.keys(room.exits);
         events.dispatchEvent({ type: 'roomChanged', payload: { exits: keys } });
         let description = `<h2 class="location">${room.name}</h2><p>${room.description}</p>`;
+        const enemy = this.state.getEnemyInRoom();
+        let enemyIsAlive = false;
+        if (enemy) enemyIsAlive = !enemy.dead;
 
-        if (room.enemies.length === 0) {
+        if (!enemyIsAlive) {
             if (room.items.length > 0) {
                 description += `<br>`;
                 description += '<p>You see ';
@@ -72,7 +74,7 @@ class GameEngine {
             const enemy = this.state.enemies[room.enemies[0]];
             description += `<p><strong>&lt;----- There is an enemy in this room, you are in combat! -----&gt;</strong></p>`;
             description += `<p>${enemy.description}</p>`;
-            description += `<p>Name: <strong>${enemy.description}</strong></p>`;
+            description += `<p>Name: <strong>${enemy.name}</strong></p>`;
             description += `<p>Average damage: <strong>${enemy.avgDamage}</strong></p>`;
             description += `<br>`;
             description += `<p><strong>&lt;----- Your turn! -----&gt;</strong></p>`;
@@ -85,7 +87,9 @@ class GameEngine {
     }
 
     setupEvents() {
-
+        events.addEventListener('playerDead', (e) => {
+            this.output(`<p>${e.payload.message}</p>`);
+        })
     }
 
     async help() {
@@ -101,12 +105,13 @@ class GameEngine {
         const verb = parts[0]
         const noun = parts.slice(1).join(' '); // join up rest of array together into a string
 
-        // TODO - different switches based on game state such as default, fighting, and any other states
+        if (this.state.gameState === 'dead') return;
+
         switch (verb) {
             case 'go':
             case 'move':
             case 'm':
-                if (!this.state.inCombat) this.goDirection(noun);
+                if (this.state.gameState !== 'combat') this.goDirection(noun);
                 else this.printInCombatWarning();
                 break;
             case 'take':
@@ -114,18 +119,27 @@ class GameEngine {
             case 'get':
             case 'g':
             case 'loot':
-                if (!this.state.inCombat) this.takeItem(noun);
+                if (this.state.gameState !== 'combat') this.takeItem(noun);
                 else this.printInCombatWarning();
                 break;
             case 'use':
                 // this.useItem(noun);
                 break;
             case 'look':
-                if (!this.state.inCombat) this.displayCurrentRoom();
+                if (this.state.gameState !== 'combat') this.displayCurrentRoom();
                 else this.printInCombatWarning();
                 break;
             case 'attack':
-                this.attack();
+                await this.attack();
+
+                // TODO - check if enemy is alive
+                const enemy = this.state.getEnemyInRoom();
+                if (enemy && !enemy.dead) {
+                    await this.displayEnemyStats();
+                    await this.output(`<p><strong>&lt;----- Enemy turn -----&gt;</strong></p>`);
+                    await this.enemyTurn();
+                    await this.output(`<p><strong>&lt;----- Your turn! -----&gt;</strong></p>`);
+                }
                 break;
             case 'run':
                 this.run();
@@ -140,7 +154,7 @@ class GameEngine {
     }
 
     async attack() {
-        if (!this.state.inCombat) {
+        if (this.state.gameState !== 'combat') {
             await this.output('<p>You must be in combat to attack!</p>');
             return;
         }
@@ -153,27 +167,99 @@ class GameEngine {
         const enemy = this.state.getEnemyInRoom();
 
         if (enemy) {
-
+            const melee = this.state.getMelee();
+            if (melee) {
+                const damage = melee.avgDamage! + HelperFunctions.randomInt(-melee.damageRange!, melee.damageRange!)
+                await this.output(`<p>You slash at ${enemy.name}`);
+                if (HelperFunctions.chance(enemy.meleeBlockChance)) await this.output(`<p>${HelperFunctions.randomArrayItem(enemy.blockMessages)}</p>`)
+                else await this.damageEnemy(enemy, damage, 'slash at'); // TODO - attack name on weapon
+            } else {
+                await this.output(`<p>You don't have a melee weapon equipped! Drag your weapon into the melee slot before ${enemy.name} attacks!</p>`);
+            }
         } else {
-            this.state.inCombat = false;
+            this.state.gameState = 'default';
         }
     }
 
+    async enemyTurn() {
+        console.log('do enemy turn');
+        const enemy = this.state.getEnemyInRoom();
+
+        if (enemy) {
+            let move = 'attack';
+
+
+            console.log(`enemy move: ${move}`);
+
+            switch (move) {
+                case 'attack':
+                    const damage = enemy.avgDamage + HelperFunctions.randomInt(-enemy.damageRange, enemy.damageRange);
+                    await this.output(`<p>${HelperFunctions.randomArrayItem(enemy.attackMessages)}</p>`);
+                    await this.output(`<p>${enemy.name} deals you <strong>${damage}</strong> damage.</p>`);
+                    this.damagePlayer(damage);
+                    break;
+            }
+        } else {
+            this.state.gameState = 'normal';
+        }
+    }
+
+    async damagePlayer(damage: number, deathMessage?: string) {
+        this.state.character.health -= damage;
+        this.state.character.health = Math.max(0, this.state.character.health);
+
+        if (this.state.character.health <= 0) {
+            this.state.gameState = 'dead';
+            events.dispatchEvent({ type: 'playerDead', payload: { message: deathMessage ? deathMessage : 'You have died' } });
+        }
+
+        events.dispatchEvent({ type: 'characterStatsUpdated', payload: {} });
+    }
+
+    /**
+     * damages the enemy, checks if the enemy is dead
+     * @param enemy 
+     * @param damage 
+     * @param attackText 
+     */
+    async damageEnemy(enemy: any, damage: number, attackText: string) {
+        enemy.health -= damage;
+        enemy.health = Math.max(0, enemy.health);
+
+        await this.output(`<p>You ${attackText} ${enemy.name} dealing <strong>${damage}</strong> damage!</p>`);
+
+        if (enemy.health <= 0) {
+            if (enemy.deathMessages) await this.output(`<p>${HelperFunctions.randomArrayItem(enemy.deathMessages)}</p>`);
+            else await this.output(`<p>${enemy.name} drops dead on the ground...</p>`);
+
+            enemy.dead = true;
+            this.state.gameState = 'normal';
+            events.dispatchEvent({type: 'enemyKilled', payload: {enemyId: enemy.id}});
+        }
+    }
+
+    async displayEnemyStats() {
+        const enemy = this.state.getEnemyInRoom();
+        if (enemy) await this.output(`<p>${enemy.name} - health: <strong>${enemy.health}/${enemy.maxHealth}<p>`);
+    }
+
     async run() {
-        if (!this.state.inCombat) {
-            await this.output('<p>You must be in combat to run</p>');
+        if (this.state.gameState !== 'combat') {
+            await this.output('<p>You must have something to run away from!</p>');
             return;
         }
 
-        if (!this.state.canRun) {
-            await this.output(`<p>You can't run!</p>`);
+        const room = this.state.getCurrentRoom();
+
+        if (!room.canRun) {
+            await this.output(`<p>Uh oh, looks like you can't run!</p>`);
             return;
         }
 
         const roomId = this.state.currentRoomId;
-        const room = this.state.getCurrentRoom();
-        Object.keys(room.exits).forEach(direction => {
+        Object.keys(room.exits).forEach(async direction => {
             if (room.exits[direction] === this.state.previousRoom) {
+                await this.output(`<p><strong>You have run from the fight!</strong></p>`);
                 this.goDirection(direction);
                 this.displayCurrentRoom();
             }
@@ -223,13 +309,14 @@ class GameEngine {
 
         if (roomAtExit.enemies.length > 0) {
             console.log('in combat');
-            this.state.inCombat = true;
+            this.state.gameState = 'combat';
             events.dispatchEvent({ type: 'enterCombat', payload: {} });
-            const enemy = this.state.getEnemyInRoom()
-            if (enemy && enemy.canRun) this.state.canRun = true;
+        } else {
+            this.state.gameState = 'normal';
         }
 
         this.state.currentRoomId = room.exits[exitId]; // set current room
+        const enemy = this.state.getEnemyInRoom();
         this.displayCurrentRoom();
     }
 
@@ -419,6 +506,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('dir-w')?.addEventListener('click', () => setInputText('go west'))
 
     const appendOutput = async (text: string) => {
+        const interval = 2;
         appendingText = true;
 
         let buffer = elementOutput.innerHTML; // Accumulate characters in a buffer
@@ -435,7 +523,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         elementOutput.scrollTop = elementOutput.scrollHeight;
                     }
                     resolve();
-                }, 2);
+                }, interval);
             });
         }
 
@@ -619,9 +707,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     events.addEventListener('roomChanged', (e) => updateCompass(e.payload.exits));
 
-    game = new GameEngine(gameData, appendOutput, displayCharacterStats, invSize);
+    game = new GameEngine(gameData, appendOutput, invSize);
     game.displayCurrentRoom();
-    displayCharacterStats();
 
     const generateInventory = () => {
         // generate inventory
@@ -686,9 +773,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         initializeDropEvents();
         drawInventory();
+        displayCharacterStats();
 
         events.addEventListener('inventoryUpdated', (e: GameEvent) => {
             drawInventory();
+        })
+
+        events.addEventListener('characterStatsUpdated', () => {
             displayCharacterStats();
         })
     }

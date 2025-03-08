@@ -8,9 +8,8 @@ export class GameState {
         this.items = {};
         this.enemies = {};
         this.currentRoomId = 'start';
-        this.inCombat = false;
-        this.canRun = false;
         this.previousRoom = '';
+        this.gameState = 'default';
         this.inventory = new Array(inventorySize).fill(''); // initialize array with no items
         this.loadGameData(gameData);
         this.inventorySize = inventorySize;
