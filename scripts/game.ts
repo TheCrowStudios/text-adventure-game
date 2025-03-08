@@ -196,9 +196,10 @@ class GameEngine {
 
             switch (move) {
                 case 'attack':
-                    const damage = enemy.avgDamage + HelperFunctions.randomInt(-enemy.damageRange, enemy.damageRange);
+                    const damage = this.calculateDamageWithArmor(enemy.avgDamage + HelperFunctions.randomInt(-enemy.damageRange, enemy.damageRange));
                     await this.output(`<p>${HelperFunctions.randomArrayItem(enemy.attackMessages)}</p>`);
                     await this.output(`<p>${enemy.name} deals you <strong>${damage}</strong> damage.</p>`);
+                    if (this.state.getCharacterArmor() > 0) await this.output('<p>Your armor has reduced some of the damage.</p>');
                     this.damagePlayer(damage);
                     break;
             }
@@ -219,6 +220,10 @@ class GameEngine {
         events.dispatchEvent({ type: 'characterStatsUpdated', payload: {} });
     }
 
+    calculateDamageWithArmor(damage: number) {
+        return Math.round(damage * (1 - this.state.getCharacterArmor() * 0.01));
+    }
+
     /**
      * damages the enemy, checks if the enemy is dead
      * @param enemy 
@@ -234,6 +239,8 @@ class GameEngine {
         if (enemy.health <= 0) {
             if (enemy.deathMessages) await this.output(`<p>${HelperFunctions.randomArrayItem(enemy.deathMessages)}</p>`);
             else await this.output(`<p>${enemy.name} drops dead on the ground...</p>`);
+
+            this.output(`<p>Type <span class="command">look</span> to look around`);
 
             enemy.dead = true;
             this.state.gameState = 'normal';
@@ -363,7 +370,7 @@ class GameEngine {
      * outputs the contents of the inventory in text format
      */
     async printInventory() {
-        let items = '<p>Inventory:<p>';
+        let items = '<p>Inventory:</p>';
         let totalItems = 0;
         this.state.inventory.forEach((slot) => {
             const item = this.state.getItemById(slot.itemId);

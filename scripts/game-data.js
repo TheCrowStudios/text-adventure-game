@@ -111,7 +111,7 @@ export const gameData = {
             meleeBlockChance: 0.2, // the chance that the enemy blocks your attack
             blockMessages: ["The goblin evades your attack", "The goblin blocks your attack"],
             attackMessages: ["The goblin charges at you with with a sword", "The goblin scratches you"],
-            deathMessages: ["The goblin drops dead on the ground with a screech... I should take his sword..."]
+            deathMessages: ["The goblin drops dead on the ground with a screech... I should <span class=\"command\">loot</span> his sword..."]
         }
     }
 };
