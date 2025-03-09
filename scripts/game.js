@@ -568,8 +568,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             cell.innerHTML = '';
             const item = game.state.getItemById(invSlot.itemId);
-            if (invSlot.itemId === '')
+            if (invSlot.itemId === '') {
                 cell.classList.remove('bg-(--bg-secondary)/70'); // remove highlight if no item (for example the selected item was destroyed after use)
+                if (selectedInvCell === cell) {
+                    const textItemInformation = document.getElementById('item-information-div');
+                    if (textItemInformation)
+                        textItemInformation.innerHTML = '';
+                }
+            }
             if (invSlot.itemId !== '' && cell && item && item.img) {
                 const img = document.createElement('img');
                 img.src = `/images/items/${item.img}`;
