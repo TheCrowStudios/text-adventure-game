@@ -2333,7 +2333,14 @@
     color: var(--color-blue-300);
   }
   .item {
+    --tw-font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-bold);
     color: var(--color-amber-200);
+  }
+  .health {
+    --tw-font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-red-500);
   }
   .exit {
     color: var(--color-amber-200);

@@ -56,4 +56,15 @@ export class GameState {
     getMelee() {
         return this.inventory[0].itemId !== '' ? this.items[this.inventory[0].itemId] : null; // first item in inventory is the equipped melee item
     }
+    getIndexOfItemFromInventoryByName(name) {
+        let index = -1;
+        for (let i = 0; i < this.inventory.length; i++) {
+            const item = this.getItemById(this.inventory[i].itemId);
+            if (item && item.name.toLowerCase() === name.toLowerCase()) {
+                index = i;
+                break;
+            }
+        }
+        return index;
+    }
 }

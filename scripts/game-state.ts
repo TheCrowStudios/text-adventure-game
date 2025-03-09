@@ -22,9 +22,11 @@ interface Item extends GameObject {
     useEffect?: string; // optional, the effect when used
     img?: string;
     type: string;
+    useable?: boolean;
     avgDamage?: number;
     damageRange?: number;
     armor?: number;
+    usePayload?: {};
 }
 
 interface Enemy extends GameObject {
@@ -115,5 +117,19 @@ export class GameState {
 
     getMelee() {
         return this.inventory[0].itemId !== '' ? this.items[this.inventory[0].itemId] : null; // first item in inventory is the equipped melee item
+    }
+
+    getIndexOfItemFromInventoryByName(name: string): number {
+        let index = -1;
+
+        for (let i = 0; i < this.inventory.length; i++) {
+            const item = this.getItemById(this.inventory[i].itemId);
+            if (item && item.name.toLowerCase() === name.toLowerCase()) {
+                index = i;
+                break;
+            }
+        }
+
+        return index;
     }
 }

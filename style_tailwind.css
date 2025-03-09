@@ -47,7 +47,11 @@
     }
 
     .item {
-        @apply text-amber-200;
+        @apply text-amber-200 font-bold;
+    }
+
+    .health {
+        @apply text-red-500 font-bold;
     }
 
     .exit {

@@ -90,11 +90,15 @@ class GameEngine {
         events.addEventListener('playerDead', (e) => {
             this.output(`<p>${e.payload.message}</p>`);
         })
+
+        events.addEventListener('itemUsed', (e) => {
+            this.itemUsed(e);
+        })
     }
 
     async help() {
         let helpText = `<p><strong>List of commands:</strong></p>`;
-        helpText += `<p><span class="command">go/move/m {direction}</span>: go to exit in specified direction</p>`;
+        helpText += `<p><span class="command">go/move/m {n/w/s/e}</span>: go to exit in specified direction</p>`;
         helpText += `<p><span class="command">look</span>: look around at the room again</p>`;
         helpText += `<p><span class="command">take/grab/get {item}</span>: take an item</p>`;
         helpText += `<p><span class="command">help</span>: this</p>`;
@@ -126,7 +130,7 @@ class GameEngine {
                 else this.printInCombatWarning();
                 break;
             case 'use':
-                // this.useItem(noun);
+                this.useItem(noun);
                 break;
             case 'inventory':
                 this.printInventory();
@@ -371,6 +375,52 @@ class GameEngine {
         if (!itemTaken) await this.output(`<p>Could not pick up <strong>${noun}</strong></p>`);
     }
 
+    async useItem(noun: string) {
+        const itemIndex = this.state.getIndexOfItemFromInventoryByName(noun);
+
+        if (itemIndex === -1) {
+            this.output(`<p>You do not have <span class="item">${noun}</span> in your inventory.</p>`);
+            return;
+        }
+
+        const slot = this.state.inventory[itemIndex];
+        const item = this.state.getItemFromInventoryIndex(itemIndex);
+
+        if (!item.useable) {
+            this.output(`<p>You cannot use <span class="item">${noun}</span></p>`);
+            return;
+        }
+
+        events.dispatchEvent({ type: 'itemUsed', payload: { slot: slot, item: item, usePayload: item.usePayload } });
+    }
+
+    async itemUsed(e: any) {
+        console.log('item used');
+
+        if (e.payload && e.payload.usePayload) {
+            const slot = e.payload.slot;
+            const item = e.payload.item;
+            const stats = e.payload.usePayload.stats
+            if (stats != null) {
+                const health = stats.health;
+                if (health) {
+                    console.log('add to character health');
+                    this.state.character.health = Math.min(this.state.character.maxHealth, this.state.character.health + health);
+                }
+                this.output(`<p>You used <span class='item'>${item.name}</span> and got <span class='health'>${health}</span> health`);
+            }
+
+            if (e.payload.usePayload.destroyItemOnUse) {
+                console.log('destroy item');
+
+                if (slot) {
+                    slot.itemId = '';
+                    events.dispatchEvent({ type: 'inventoryUpdated', payload: {} });
+                }
+            }
+        }
+    }
+
     /**
      * outputs the contents of the inventory in text format
      */
@@ -611,6 +661,8 @@ document.addEventListener('DOMContentLoaded', () => {
             cell.innerHTML = '';
             const item = game.state.getItemById(invSlot.itemId);
 
+            if (invSlot.itemId === '') cell.classList.remove('bg-(--bg-secondary)/70') // remove highlight if no item (for example the selected item was destroyed after use)
+
             if (invSlot.itemId !== '' && cell && item && item.img) {
                 const img = document.createElement('img') as HTMLImageElement;
                 img.src = `/images/items/${item.img}`;
@@ -679,6 +731,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const textItemInformation = document.getElementById('item-information-div');
         if (textItemInformation) {
             textItemInformation.innerHTML = `<p><strong>${item.name}</strong></p><p>${item.description}</p>`;
+
+            if (item.useable) {
+                const btnUse = document.createElement('button') as HTMLButtonElement;
+                btnUse.textContent = 'Use Item';
+                btnUse.classList.add('button');
+                btnUse.addEventListener('click', () => {
+                    setInputText(`use ${item.name}`);
+                });
+                textItemInformation.appendChild(btnUse);
+            }
 
             if (item.avgDamage) textItemInformation.innerHTML += `<p>Avg. Damage: <strong>${item.avgDamage}</strong></p>`;
             if (item.armor) textItemInformation.innerHTML += `<p>Armor: <strong>${item.armor}</strong></p>`;

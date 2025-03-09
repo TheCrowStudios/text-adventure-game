@@ -23,7 +23,7 @@ export const gameData = {
             name: "The village square",
             description: "The village square. It's pretty dirty, but hey, at least it's sunny out here. Today's a beautiful day.", // TODO - dynamic weather which affects certain things like combat?
             exits: { "w": "home", "n": "village_outskirts_n", "e": "village_blacksmith" },
-            items: [],
+            items: ["health_potion"],
             enemies: []
         },
         "village_blacksmith": {
@@ -62,6 +62,17 @@ export const gameData = {
             useEffect: "light", // TODO - give item types, such as weapon, food, or armor, etc
             img: "torch.png", // NOTE - images for items must be placed under /images/items/nameofimage
             type: "item"
+        },
+        "health_potion": {
+            id: "health_potion",
+            name: "Health Potion",
+            description: "Restores your health to full when used.",
+            canTake: true,
+            useEffect: "stats",
+            useable: true,
+            usePayload: { stats: { health: 100 }, destroyItemOnUse: true },
+            img: "health_potion.png",
+            type: "consumable"
         },
         "dagger": {
             id: "dagger",
