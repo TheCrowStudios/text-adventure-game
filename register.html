@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
-    <script defer src="/scripts/verify-registration-form.js"></script>
+    <script type="module" src="/scripts/register.js"></script>
 </head>
 
 <body class="overflow-x-hidden overflow-y-hidden bg-(--bg-primary) flex justify-center items-center">
@@ -19,31 +19,30 @@
                         <p>Username</p>
                         <input type="text" name="username"
                             class="bg-(--bg-tertiary) rounded-xl px-2 py-1 text-(--text-tertiary) w-full"
-                            id="username"  onchange="validateUsername()" required>
-                        <span class="form-error hidden" id="error-username"></span>
+                            id="username" required>
+                        <span class="text-(--text-error) hidden" id="error-username"></span>
                     </div>
                     <div>
                         <p>Password</p>
                         <input type="password" name="password"
                             class="bg-(--bg-tertiary) rounded-xl px-2 py-1 text-(--text-tertiary) w-full"
-                            id="password" onchange="validatePassword()" required>
-                        <span class="form-error hidden" id="error-password"></span>
+                            id="password" required>
+                        <span class="text-(--text-error) form-error hidden" id="error-password"></span>
                     </div>
                     <div>
                         <p>Confirm Password</p>
                         <input type="password" name="password"
                             class="bg-(--bg-tertiary) rounded-xl px-2 py-1 text-(--text-tertiary) w-full"
-                            id="confirm-password" onchange="validatePassword()" required>
-                        <span class="form-error hidden" id="error-password-confirm"></span>
+                            id="confirm-password" required>
+                        <span class="text-(--text-error) form-error hidden" id="error-password-confirm"></span>
                     </div>
                     <button
                         class="rounded-xl bg-(--bg-primary) p-2 hover:opacity-70 border-2 border-(--bg-secondary) hover:border-(--text-highlight) transition-all duration-300 cursor-pointer"
                         id="button-login" type="submit">Register</button>
-                    <span class="text-red-500 hidden" id="error"></span>
+                    <span class="text-(--text-error) hidden" id="error"></span>
                     <span>Already have an account? Log in <a href="/login" class="link">here</a>.</span>
                 </form>
             </div>
-            <span>This doesnt do anything yet btw.</span>
         </div>
     </main>
 </body>

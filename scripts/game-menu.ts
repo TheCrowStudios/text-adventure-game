@@ -34,4 +34,4 @@ document.addEventListener('DOMContentLoaded', () => {
     btnBack.addEventListener('click', hideSlotActions);
 })
 
-if (!document.cookie.includes('username=user')) document.location = '/login';
+if (!document.cookie.includes('username=')) document.location = '/login';

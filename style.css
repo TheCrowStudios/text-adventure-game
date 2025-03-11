@@ -46,6 +46,7 @@
     --text-secondary: oklch(0.708 0 0);
     --text-tertiary: oklch(0.205 0 0);
     --text-highlight: oklch(0.705 0.213 47.604);
+    --text-error: oklch(0.637 0.237 25.331);
   }
 }
 @layer base {
@@ -1577,6 +1578,9 @@
   }
   .\[color\:red\]\/50\! {
     color: color-mix(in oklab, red 50%, transparent) !important;
+  }
+  .text-\(--text-error\) {
+    color: var(--text-error);
   }
   .text-\(--text-primary\) {
     color: var(--text-primary);

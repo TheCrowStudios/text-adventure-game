@@ -502,7 +502,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     btnLogOut.addEventListener('click', () => {
         confirmationPopup('Are you sure you want to log out? Any unsaved progress will be lost.', () => {
-            document.cookie = 'username=; secure;';
+            document.cookie = 'username=; secure; expires=Thu, 01 Jan 1970 00:00:01 GMT';
             document.location = '/login';
         });
     });
@@ -797,5 +797,5 @@ function confirmationPopup(text, callback) {
     });
     confirmation === null || confirmation === void 0 ? void 0 : confirmation.classList.remove('-translate-y-[200%]', 'opacity-0', 'pointer-events-none');
 }
-if (!document.cookie.includes('username=user'))
+if (!document.cookie.includes('username='))
     document.location = '/login';

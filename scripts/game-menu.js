@@ -29,5 +29,5 @@ document.addEventListener('DOMContentLoaded', () => {
     btnNewGame.addEventListener('click', newGame);
     btnBack.addEventListener('click', hideSlotActions);
 });
-if (!document.cookie.includes('username=user'))
+if (!document.cookie.includes('username='))
     document.location = '/login';
