@@ -12,13 +12,13 @@
 <body class="overflow-x-hidden overflow-y-hidden">
     <main class="w-screen h-screen bg-(--bg-primary) text-(--text-primary) p-4">
         <!-- the game div with the inventory, images, whatever -->
-        <div class="flex flex-row max-lg:flex-col w-full h-full gap-4">
+        <div class="flex flex-row max-lg:flex-col w-full h-full gap-4 max-lg:hidden">
             <!-- col 1 -->
             <div
                 class="flex max-lg:relative items-center max-lg:order-2 max-lg:w-full max-lg:h-5/12 flex-col max-lg:flex-row w-3/12 h-full scrollbar gap-4 p-2">
                 <!-- inventory  -->
                 <div
-                    class="aspect-square object-cover lg:max-h-1/2 max-lg:max-h-full max-lg:max-w-1/2 lg:h-full lg:max-h-full lg:max-w-full max-lg:h-full">
+                    class="aspect-square object-cover lg:max-h-1/2 max-lg:max-h-full max-lg:max-w-1/2 lg:h-full lg:max-w-full max-lg:h-full">
                     <div class="grid aspect-square object-cover max-lg:grid-cols-4 max-lg:grid-rows-4 max-w-full grid-cols-4 grid-rows-4 auto-cols-max"
                         id="inventory">
                     </div>
@@ -116,8 +116,10 @@
             </div>
         </div>
 
-        <div class="absolute left-0 top-0 -translate-y-[200%] opacity-0 w-full h-full flex justify-center transition-all duration-300 pointer-events-none" id="confirmation-popup">
-            <div class="self-center h-[50vh] max-w-screen aspect-4/3 bg-(--bg-primary) shadow-xl rounded-xl p-4 flex flex-col justify-center text-center gap-2">
+        <div class="absolute left-0 top-0 -translate-y-[200%] opacity-0 w-full h-full flex justify-center transition-all duration-300 pointer-events-none"
+            id="confirmation-popup">
+            <div
+                class="self-center h-[50vh] max-w-screen aspect-4/3 bg-(--bg-primary) shadow-xl rounded-xl p-4 flex flex-col justify-center text-center gap-2">
                 <span class="text-3xl" id="txt-confirmation-message">Confirmation Text</span>
                 <div class="flex flex-row gap-2">
                     <button class="button text-3xl" id="btn-confirmation-confirm">Yes</button>
@@ -125,6 +127,9 @@
                 </div>
             </div>
         </div>
+
+        <span class="lg:hidden">You're probably viewing this on a small screen, you need a bigger one otherwise the
+            layout will not really work.</span>
     </main>
 </body>
 
