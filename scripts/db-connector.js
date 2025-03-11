@@ -50,3 +50,7 @@ export async function getUserByUsernameAndPassword(username, password) {
 export async function createNewUser(username, password) {
     return (await executeDatabaseQuery(`INSERT INTO users (username, password) VALUES ('${username}', '${password}')`));
 }
+export async function saveGameState(username, slot, state) {
+    const user = await getUserByUsername(username);
+    return (await executeDatabaseQuery(``));
+}

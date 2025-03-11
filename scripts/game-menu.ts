@@ -14,6 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     })
 
+    /**
+     * hides save slots, shows save slot actions
+     * @param index 
+     */
     const showSlotActions = (index: number) => {
         divSaveSlots.classList.add('-translate-y-full', 'opacity-0');
         divSaveSlotActions.classList.remove('translate-y-full', 'opacity-0');
@@ -21,6 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
         btnContinue.disabled = true; // TODO - enable button if there is a save in that save slot available
     }
 
+    /**
+     * hides save slot actions, shows save slots
+     */
     const hideSlotActions = () => {
         divSaveSlots.classList.remove('-translate-y-full', 'opacity-0');
         divSaveSlotActions.classList.add('translate-y-full', 'opacity-0');
