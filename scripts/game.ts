@@ -142,7 +142,6 @@ class GameEngine {
             case 'attack':
                 await this.attack();
 
-                // TODO - check if enemy is alive
                 const enemy = this.state.getEnemyInRoom();
                 if (enemy && !enemy.dead) {
                     await this.displayEnemyStats();
@@ -519,7 +518,7 @@ class GameEngine {
             sourceItemFitsDestinationSlotType = false;
         }
 
-        // TODO - this is so janky, but it works, y'all could do this better
+        // TODO - this is so janky, but it works, y'all could probably do this better
         // check if swapping items would cause an item to be placed in a mismatching slot, if it will, move source item to first empty slot of storage type (eg. swapping a sword with a torch)
         if (destinationItem && ((destinationItem.type === 'item' && sourceSlot.type !== 'storage') || (destinationItem.type !== 'item' && sourceSlot.type !== 'storage' && destinationItem.type !== sourceSlot.type))) {
             destinationItemFitsSourceSlotType = false;

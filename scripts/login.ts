@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     formLogin?.addEventListener('submit', async (e) => {
         e.preventDefault();
-        // TODO - access database here
         // so according to the specification we can only access the data client side, which is kinda silly, it sounds very not secure.
 
         const user = await getUserByUsernameAndPassword(inpUsername.value, inpPassword.value);
