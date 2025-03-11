@@ -1,19 +1,19 @@
 export const gameData = {
-    startRoom: "village_outside", // starting room
+    startRoom: "village_outside",
     health: 20,
     maxHealth: 20,
-    inCombat: false, // do not change
-    gameState: 'normal', // the state, one of: normal, combat, dead
+    inCombat: false,
+    gameState: 'normal',
     inventory: [{ type: 'melee', itemId: 'dagger', slotImg: 'melee_slot.png' }, { type: 'armor-chestplate', itemId: '', slotImg: 'armor_chestplate_slot.png' }, { type: 'armor-helmet', itemId: '', slotImg: 'armor_helmet_slot.png' }, { type: 'armor-leggings', itemId: '', slotImg: 'armor_leggings_slot.png' },
         { type: 'armor-boots', itemId: '', slotImg: 'armor_boots_slot.png' }, { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' },
         { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' },
         { type: 'storage', itemId: '' }
-    ], // put whatever starting items here
+    ],
     rooms: {
         "home": {
             id: "home",
             name: "Your home",
-            description: "You wake up in your house that is almost falling apart, but you can't do much about it since you're just a simple peasant, like everyone else here.", // TODO - dynamic description based on game stage, such as start of game, mid game, end game, perhaps?
+            description: "You wake up in your house that is almost falling apart, but you can't do much about it since you're just a simple peasant, like everyone else here.",
             exits: { "e": "village_outside" },
             items: ["torch"],
             enemies: []
@@ -21,7 +21,7 @@ export const gameData = {
         "village_outside": {
             id: "village_outside",
             name: "The village square",
-            description: "The village square. It's pretty dirty, but hey, at least it's sunny out here. Today's a beautiful day.", // TODO - dynamic weather which affects certain things like combat?
+            description: "The village square. It's pretty dirty, but hey, at least it's sunny out here. Today's a beautiful day.",
             exits: { "w": "home", "n": "village_outskirts_n", "e": "village_blacksmith" },
             items: ["health_potion"],
             enemies: []
@@ -40,8 +40,8 @@ export const gameData = {
             description: "A beautiful field with lush green grass",
             exits: { "n": "village_forest", "s": "village_outside" },
             items: [],
-            enemies: ["goblin_regular"], // so far only works with one enemy at most per room.
-            requiredItems: ["dagger"], // require the dagger item to enter this room.
+            enemies: ["goblin_regular"],
+            requiredItems: ["dagger"],
             canRun: true
         },
         "village_forest": {
@@ -59,8 +59,8 @@ export const gameData = {
             name: "Torch",
             description: "A wooden torch that provides light where there is a lack of it",
             canTake: true,
-            useEffect: "light", // TODO - give item types, such as weapon, food, or armor, etc
-            img: "torch.png", // NOTE - images for items must be placed under /images/items/nameofimage
+            useEffect: "light",
+            img: "torch.png",
             type: "item"
         },
         "health_potion": {
@@ -116,10 +116,10 @@ export const gameData = {
             maxHealth: 12,
             avgDamage: 2,
             damageRange: 1,
-            canRun: true, // whether the player can run from the fight to the previous room
+            canRun: true,
             items: ["steel_sword"],
             dead: false,
-            meleeBlockChance: 0.2, // the chance that the enemy blocks your attack
+            meleeBlockChance: 0.2,
             blockMessages: ["The goblin evades your attack", "The goblin blocks your attack"],
             attackMessages: ["The goblin charges at you with with a sword", "The goblin scratches you"],
             deathMessages: ["The goblin drops dead on the ground with a screech... I should <span class=\"command\">loot</span> his sword..."]

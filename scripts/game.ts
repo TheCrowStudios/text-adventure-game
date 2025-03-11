@@ -1,6 +1,7 @@
 import { GameState } from "./game-state.js";
 import { gameData } from "./game-data.js";
 import { HelperFunctions } from "./helper-functions.js";
+import { saveGameState } from "./db-connector.js";
 
 type GameEvent = {
     type: string;
@@ -569,7 +570,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnLogOut = document.getElementById('btn-log-out') as HTMLButtonElement;
     let appendingText = false;
 
-    // btnSaveGame.addEventListener('click')
+    btnSaveGame.addEventListener('click', () => {
+        console.log('saving game');
+        const username = HelperFunctions.getCookieValue('username');
+        const saveSlotIndex = HelperFunctions.getCookieValue('saveSlot');
+
+        try {
+            if (username && saveSlotIndex) {
+                const state = JSON.stringify(game.state);
+                saveGameState(username, Number.parseInt(saveSlotIndex), state);
+            }
+        } catch (error) {
+            console.error(`could not save game: ${error}`);
+        }
+    })
+
     btnLastSave.addEventListener('click', () => {
         confirmationPopup('Are you sure you want to load the last save? Any unsaved progress will be lost.', () => document.location = '/game');
     })

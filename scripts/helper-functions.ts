@@ -10,4 +10,11 @@ export class HelperFunctions {
     static randomArrayItem(array: any[]) {
         return array[this.randomInt(0, array.length - 1)];
     }
+
+    static getCookieValue(cookie: string) {
+        const parts = `; ${document.cookie}`.split(`; ${cookie}=`);
+
+        if (parts.length === 2) return parts.pop()?.split(';').shift();
+        return null;
+    }
 }

@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnNewGame = document.getElementById('btn-new-game') as HTMLButtonElement;
     const btnBack = document.getElementById('btn-back') as HTMLButtonElement;
     const txtSaveSlotName = document.getElementById('txt-save-slot-name') as HTMLSpanElement;
+    let saveSlotIndex = 0;
 
     saveSlotButtons.forEach((button, i) => {
         button.addEventListener('click', () => {
@@ -23,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         divSaveSlotActions.classList.remove('translate-y-full', 'opacity-0');
         txtSaveSlotName.textContent = `Save Slot ${index + 1}`;
         btnContinue.disabled = true; // TODO - enable button if there is a save in that save slot available
+        saveSlotIndex = index;
     }
 
     /**
@@ -34,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const newGame = () => {
+        document.cookie = `saveSlot=${saveSlotIndex}; Secure;`;
         document.location = '/game';
     }
 

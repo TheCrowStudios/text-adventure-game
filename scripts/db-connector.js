@@ -52,5 +52,5 @@ export async function createNewUser(username, password) {
 }
 export async function saveGameState(username, slot, state) {
     const user = await getUserByUsername(username);
-    return (await executeDatabaseQuery(``));
+    return (await executeDatabaseQuery(`INSERT INTO TABLE saves (user_id, save_slot, state) VALUES () ON DUPLICATE KEY UPDATE state = '${state}'`));
 }
