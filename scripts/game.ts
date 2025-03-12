@@ -156,6 +156,7 @@ class GameEngine {
                 this.run();
                 break;
             case 'loot':
+                this.loot();
                 break;
             case 'help':
                 this.help();
@@ -288,6 +289,35 @@ class GameEngine {
         if (roomId === this.state.currentRoomId) {
             await this.output(`<p>Could not run!</p>`);
         }
+    }
+
+    async loot() {
+        const enemy = this.state.getEnemyInRoom();
+
+        if (!enemy) {
+            await this.output(`<p>There are no enemies in room to loot</p>`);
+            return;
+        }
+
+        if (enemy.health > 0) {
+            await this.output(`<p>${enemy.name} is still alive!</p>`);
+            return;
+        }
+
+        if (enemy.items.length === 0) {
+            await this.output(`<p>${enemy.name} has no items</p>`);
+            return;
+        }
+
+        enemy.items.forEach(async (itemId, index) => {
+            const item = this.state.getItemById(itemId);
+
+            if (item) {
+                this.addItemToInventory(itemId);
+                enemy.items.splice(index, 1);
+                await this.output(`<p>Picked up <strong class="item">${item.name}</strong>.</p>`);
+            }
+        })
     }
 
     async printInCombatWarning() {
