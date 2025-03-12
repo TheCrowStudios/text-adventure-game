@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const saveSlotActionButtons = document.getElementById('#save-slot-actions > button');
     const btnContinue = document.getElementById('btn-continue');
     const btnNewGame = document.getElementById('btn-new-game');
+    const divNewGameConfirmation = document.getElementById('new-game-confirmation');
+    const btnNewGameConfirm = document.getElementById('btn-new-game-confirm');
+    const btnNewGameCancel = document.getElementById('btn-new-game-cancel');
     const btnBack = document.getElementById('btn-back');
     const txtSaveSlotName = document.getElementById('txt-save-slot-name');
     const username = HelperFunctions.getCookieValue('username');
@@ -49,12 +52,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.cookie = `saveSlot=${saveSlotIndex}; Secure;`;
         document.location = '/game';
     };
+    const showConfirmNewGame = () => {
+        divNewGameConfirmation.classList.remove('translate-y-full', 'opacity-0');
+        divSaveSlotActions.classList.add('-translate-y-full', 'opacity-0');
+    };
+    const hideConfirmNewGame = () => {
+        divNewGameConfirmation.classList.add('translate-y-full', 'opacity-0');
+        divSaveSlotActions.classList.remove('-translate-y-full', 'opacity-0');
+    };
     const newGame = async () => {
         await saveGameState(username, saveSlotIndex, JSON.stringify(new GameState(gameData, 16)));
         continueGame();
     };
     btnContinue.addEventListener('click', continueGame);
-    btnNewGame.addEventListener('click', newGame);
+    btnNewGame.addEventListener('click', showConfirmNewGame);
+    btnNewGameConfirm.addEventListener('click', newGame);
+    btnNewGameCancel.addEventListener('click', hideConfirmNewGame);
     btnBack.addEventListener('click', hideSlotActions);
 });
 if (!document.cookie.includes('username='))

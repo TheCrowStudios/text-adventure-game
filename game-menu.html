@@ -14,7 +14,7 @@
         <div class="absolute text-center transition-all duration-300 w-full h-full flex flex-col justify-center gap-2"
             id="save-slots">
             <span class="text-3xl">Game Saves</span>
-            <div class="grid grid-cols-3 justify-center self-center w-8/12 gap-8">
+            <div class="grid grid-cols-3 justify-center self-center w-9/12 gap-8">
                 <button class="menu-button">
                     <p class="text-3xl">Save Slot 1</p>
                     <p class="text-lg text-(--text-secondary) txt-save-slot-contents">Empty</p>
@@ -33,7 +33,7 @@
         <div class="absolute text-center translate-y-full opacity-0 transition-all duration-300 w-full h-full flex flex-col justify-center gap-2"
             id="save-slot-actions">
             <span class="text-3xl" id="txt-save-slot-name">Save Slot</span>
-            <div class="grid grid-cols-3 justify-center self-center w-8/12 gap-8">
+            <div class="grid grid-cols-3 justify-center self-center w-9/12 gap-8">
                 <button class="menu-button" id="btn-continue">
                     <p class="text-3xl">Continue</p>
                 </button>
@@ -45,6 +45,18 @@
                 </button>
             </div>
         </div>
+
+        <div class="absolute text-center translate-y-full opacity-0 transition-all duration-300 w-full h-full flex flex-col justify-center gap-2"
+            id="new-game-confirmation">
+            <span class="text-3xl">Are you sure you want to start a new game? This will overwrite the previous save.</span>
+            <div class="grid grid-cols-2 justify-center self-center w-6/12 gap-8">
+                <button class="menu-button" id="btn-new-game-confirm">
+                    <p class="text-3xl">Confirm</p>
+                </button>
+                <button class="menu-button" id="btn-new-game-cancel">
+                    <p class="text-3xl">Go Back</p>
+                </button>
+            </div>
         </div>
     </main>
 </body>

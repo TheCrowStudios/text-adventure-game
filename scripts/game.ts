@@ -143,14 +143,7 @@ class GameEngine {
                 break;
             case 'attack':
                 await this.attack();
-
-                const enemy = this.state.getEnemyInRoom();
-                if (enemy && !enemy.dead) {
-                    await this.displayEnemyStats();
-                    await this.output(`<p><strong>&lt;----- Enemy turn -----&gt;</strong></p>`);
-                    await this.enemyTurn();
-                    await this.output(`<p><strong>&lt;----- Your turn! -----&gt;</strong></p>`);
-                }
+                this.doEnemyTurn();
                 break;
             case 'run':
                 this.run();
@@ -192,6 +185,19 @@ class GameEngine {
             }
         } else {
             this.state.gameState = 'default';
+        }
+    }
+
+    /**
+     * checks if enemy is alive
+     */
+    async doEnemyTurn() {
+        const enemy = this.state.getEnemyInRoom();
+        if (enemy && !enemy.dead) {
+            await this.displayEnemyStats();
+            await this.output(`<p><strong>&lt;----- Enemy turn -----&gt;</strong></p>`);
+            await this.enemyTurn();
+            await this.output(`<p><strong>&lt;----- Your turn! -----&gt;</strong></p>`);
         }
     }
 
