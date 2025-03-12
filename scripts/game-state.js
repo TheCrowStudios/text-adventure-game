@@ -25,6 +25,7 @@ export class GameState {
         this.enemies = gameData.enemies || {};
         this.currentRoomId = gameData.currentRoomId || 'start';
         this.inventory = gameData.inventory;
+        this.gameState = gameData.gameState;
     }
     getCurrentRoom() {
         return this.rooms[this.currentRoomId];

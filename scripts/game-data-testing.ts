@@ -1,10 +1,10 @@
 export const gameData = {
-    currentRoomId: "home", // starting room
+    currentRoomId: "village_outside", // starting room
     health: 20,
     maxHealth: 20,
     inCombat: false, // do not change
     gameState: 'normal', // the state, one of: normal, combat, dead
-    inventory: [{ type: 'melee', itemId: '', slotImg: 'melee_slot.png' }, { type: 'armor-chestplate', itemId: '', slotImg: 'armor_chestplate_slot.png' }, { type: 'armor-helmet', itemId: '', slotImg: 'armor_helmet_slot.png' }, { type: 'armor-leggings', itemId: '', slotImg: 'armor_leggings_slot.png' },
+    inventory: [{ type: 'melee', itemId: 'dagger', slotImg: 'melee_slot.png' }, { type: 'armor-chestplate', itemId: '', slotImg: 'armor_chestplate_slot.png' }, { type: 'armor-helmet', itemId: '', slotImg: 'armor_helmet_slot.png' }, { type: 'armor-leggings', itemId: '', slotImg: 'armor_leggings_slot.png' },
     { type: 'armor-boots', itemId: '', slotImg: 'armor_boots_slot.png' }, { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' },
     { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' }, { type: 'storage', itemId: '' },
     { type: 'storage', itemId: '' }
