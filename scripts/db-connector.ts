@@ -1,3 +1,5 @@
+import { HelperFunctions } from "./helper-functions.js";
+
 // let selectQuery = 'SELECT * FROM testUsers;';
 // let insertQuery = 'INSERT INTO testUsers(email, pw) VALUES ("a.nothea@mail.com", "pass")';
 
@@ -62,6 +64,37 @@ export async function createNewUser(username: string, password: string) {
 
 export async function saveGameState(username: string, slot: number, state: string) {
     const user = await getUserByUsername(username);
+    const stateEscaped = HelperFunctions.escape_sql_string(state);
 
-    return (await executeDatabaseQuery(`INSERT INTO TABLE saves (user_id, save_slot, state) VALUES () ON DUPLICATE KEY UPDATE state = '${state}'`));
+    if (user !== null && user.data && user.data.length > 0) {
+        return (await executeDatabaseQuery(`INSERT INTO saves (user_id, save_slot_position, game_state) VALUES (${user.data[0].user_id}, ${slot}, "${stateEscaped}") ON DUPLICATE KEY UPDATE game_state = "${stateEscaped}"`)).affected_rows > 0;
+    }
+
+    return false;
+}
+
+export async function getSlotModifiedAtFromPosition(username: string, slot: number) {
+    const user = await getUserByUsername(username);
+
+    if (user !== null && user.data && user.data.length > 0) {
+        const modifiedAt = (await executeDatabaseQuery(`SELECT modified_at FROM saves WHERE user_id = '${user.data[0].user_id}' AND save_slot_position = '${slot}'`));
+        if (modifiedAt.data.length > 0 && modifiedAt.data[0].modified_at) {
+            return modifiedAt.data[0].modified_at;
+        }
+    }
+
+    return null;
+}
+
+export async function getGameStateFromSlot(username: string, slot: number) {
+    const user = await getUserByUsername(username);
+
+    if (user !== null && user.data && user.data.length > 0) {
+        const gameState = (await executeDatabaseQuery(`SELECT game_state FROM saves WHERE user_id = '${user.data[0].user_id}' AND save_slot_position = '${slot}'`));
+        if (gameState.data.length > 0 && gameState.data[0].game_state) {
+            return gameState.data[0].game_state;
+        }
+    }
+
+    return null;
 }

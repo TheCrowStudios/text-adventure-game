@@ -77,7 +77,7 @@ export class GameState {
         this.rooms = gameData.rooms || {};
         this.items = gameData.items || {};
         this.enemies = gameData.enemies || {};
-        this.currentRoomId = gameData.startRoom || 'start';
+        this.currentRoomId = gameData.currentRoomId || 'start';
         this.inventory = gameData.inventory;
     }
 

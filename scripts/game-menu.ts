@@ -1,4 +1,10 @@
-document.addEventListener('DOMContentLoaded', () => {
+import { getSlotModifiedAtFromPosition } from "./db-connector.js";
+import { saveGameState } from "./db-connector.js";
+import { GameState } from "./game-state.js";
+import { HelperFunctions } from "./helper-functions.js";
+import { gameData } from "./game-data.js";
+
+document.addEventListener('DOMContentLoaded', async () => {
     const divSaveSlots = document.getElementById('save-slots') as HTMLDivElement;
     const saveSlotButtons = document.querySelectorAll('#save-slots > div > button') as NodeListOf<HTMLButtonElement>;
     const divSaveSlotActions = document.getElementById('save-slot-actions') as HTMLDivElement;
@@ -7,11 +13,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnNewGame = document.getElementById('btn-new-game') as HTMLButtonElement;
     const btnBack = document.getElementById('btn-back') as HTMLButtonElement;
     const txtSaveSlotName = document.getElementById('txt-save-slot-name') as HTMLSpanElement;
+    const username = HelperFunctions.getCookieValue('username');
     let saveSlotIndex = 0;
 
-    saveSlotButtons.forEach((button, i) => {
+    saveSlotButtons.forEach(async (button, i) => {
+        const txtSaveSlotContents = button.querySelector(".txt-save-slot-contents") as HTMLSpanElement;
+        const modified = await getSlotModifiedAtFromPosition(username!, i);
+
+        if (modified !== null) {
+            txtSaveSlotContents.textContent = modified;
+        } else {
+            txtSaveSlotContents.textContent = 'Empty';
+        }
+
         button.addEventListener('click', () => {
-            showSlotActions(i);
+            showSlotActions(i, modified !== null);
         })
     })
 
@@ -19,11 +35,11 @@ document.addEventListener('DOMContentLoaded', () => {
      * hides save slots, shows save slot actions
      * @param index 
      */
-    const showSlotActions = (index: number) => {
+    const showSlotActions = (index: number, saveSlotIsNotEmpty: boolean) => {
         divSaveSlots.classList.add('-translate-y-full', 'opacity-0');
         divSaveSlotActions.classList.remove('translate-y-full', 'opacity-0');
         txtSaveSlotName.textContent = `Save Slot ${index + 1}`;
-        btnContinue.disabled = true; // TODO - enable button if there is a save in that save slot available
+        btnContinue.disabled = !saveSlotIsNotEmpty;
         saveSlotIndex = index;
     }
 
@@ -35,11 +51,17 @@ document.addEventListener('DOMContentLoaded', () => {
         divSaveSlotActions.classList.add('translate-y-full', 'opacity-0');
     }
 
-    const newGame = () => {
+    const continueGame = async () => {
         document.cookie = `saveSlot=${saveSlotIndex}; Secure;`;
         document.location = '/game';
     }
 
+    const newGame = async () => {
+        await saveGameState(username!, saveSlotIndex, JSON.stringify(new GameState(gameData, 16)));
+        continueGame();
+    }
+
+    btnContinue.addEventListener('click', continueGame);
     btnNewGame.addEventListener('click', newGame);
     btnBack.addEventListener('click', hideSlotActions);
 })

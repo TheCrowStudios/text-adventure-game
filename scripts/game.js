@@ -2,6 +2,7 @@ import { GameState } from "./game-state.js";
 import { gameData } from "./game-data.js";
 import { HelperFunctions } from "./helper-functions.js";
 import { saveGameState } from "./db-connector.js";
+import { getGameStateFromSlot } from "./db-connector.js";
 class EventSystem {
     constructor() {
         this.listeners = {};
@@ -482,7 +483,7 @@ class CommandProcessor {
 }
 let game;
 let currentDragOperation = false; // global variable to track if we are in a valid inventory drag operation
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     var _a, _b, _c, _d;
     const elementOutput = document.getElementById('game-output');
     const formInput = document.getElementById('form-input');
@@ -720,7 +721,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
     events.addEventListener('roomChanged', (e) => updateCompass(e.payload.exits));
-    game = new GameEngine(gameData, appendOutput, invSize);
+    const gameDataFromDb = await getGameStateFromSlot(HelperFunctions.getCookieValue('username'), Number.parseInt(HelperFunctions.getCookieValue('saveSlot') || '0'));
+    try {
+        if (gameDataFromDb)
+            game = new GameEngine(JSON.parse(gameDataFromDb), appendOutput, invSize);
+        else
+            game = new GameEngine(gameData, appendOutput, invSize);
+    }
+    catch (error) {
+        console.error(`error while parsing save data`);
+        game = new GameEngine(gameData, appendOutput, invSize);
+    }
     game.displayCurrentRoom();
     const generateInventory = () => {
         // generate inventory

@@ -1,5 +1,5 @@
 export const gameData = {
-    startRoom: "village_outside", // starting room
+    currentRoomId: "village_outside", // starting room
     health: 20,
     maxHealth: 20,
     inCombat: false, // do not change
