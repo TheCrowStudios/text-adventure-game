@@ -532,10 +532,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (username && saveSlotIndex) {
                 const state = JSON.stringify(game.state);
                 saveGameState(username, Number.parseInt(saveSlotIndex), state);
+                HelperFunctions.showNotification('Game saved! :3');
             }
         }
         catch (error) {
             console.error(`could not save game: ${error}`);
+            HelperFunctions.showNotification('Could not save game :c');
         }
     });
     btnLastSave.addEventListener('click', () => {

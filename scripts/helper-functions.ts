@@ -44,4 +44,25 @@ export class HelperFunctions {
             }
         });
     }
+
+    static showNotification(message: string) {
+        const msg = document.createElement('div');
+        msg.className = `top-0 left-1/2 bg-(--bg-tertiary) -translate-x-1/2 translate-y-1/2 fixed self-center opacity-100 max-w-fit transition-all duration-1000 rounded-xl border-[1px] border-rounded-xl border-(--text-tertiary)`
+        msg.innerHTML = `<p class="text-(--text-tertiary) px-8 py-4">${message}</p>`;
+        const main = document.querySelector('main');
+        const appendedDiv = main?.appendChild(msg) as HTMLDivElement;
+        const appendedMsgDiv = appendedDiv.firstChild as HTMLDivElement;
+
+        appendedMsgDiv.addEventListener('click', (event) => {
+            msg.classList.add('opacity-0');
+        })
+
+        setTimeout(() => {
+            msg.classList.remove('opacity-100');
+            msg.classList.add('opacity-0');
+            setTimeout(() => {
+                msg.remove();
+            }, 1000);
+        }, 2000);
+    }
 }
